@@ -1273,6 +1273,20 @@ body.favorite-mode .favorite-filter-bar{display:block;background:#fff;border:1px
     padding:0 10px !important;
     font-size:12px !important;
   }
+  body.view-list:not(.favorite-mode):not(.date-list-mode):not(.dm-purchase-tab-mode) .card.is-purchased-search .card-actions .favorite-action-btn{
+    order:1 !important;
+  }
+  body.view-list:not(.favorite-mode):not(.date-list-mode):not(.dm-purchase-tab-mode) .card.is-purchased-search .card-actions .history-btn{
+    order:2 !important;
+    background:#FFFFFF !important;
+    color:#52525B !important;
+    border-color:#D9DCE1 !important;
+  }
+  html[data-theme="dark"] body.view-list:not(.favorite-mode):not(.date-list-mode):not(.dm-purchase-tab-mode) .card.is-purchased-search .card-actions .history-btn{
+    background:#242427 !important;
+    color:#E4E4E7 !important;
+    border-color:#4A4A52 !important;
+  }
 }
 
 
@@ -2128,14 +2142,39 @@ async function searchMasterFromPurchaseTab(){
   hits.forEach(item=>{const row=document.createElement('div');row.className='dm-purchase-search-row';row.innerHTML=`<div class="dm-purchase-search-text"><div class="dm-purchase-search-title">${esc(item.title||'(제목 없음)')}</div><div class="dm-purchase-search-author">${esc(item.author||'작가 정보 없음')}</div></div><button type="button">${resultButtonText(item)}</button>`;row.querySelector('button').addEventListener('click',()=>openRecordForm(item,null));box.appendChild(row)})
 }
 let purchaseTabScrollY=0,purchaseTabHasPosition=false;
+function renderPurchaseTabAtScroll(y,focusItem){
+  const htmlEl=document.documentElement,body=document.body;
+  const old={htmlScrollBehavior:htmlEl.style.scrollBehavior,htmlOverflowAnchor:htmlEl.style.overflowAnchor,bodyPosition:body.style.position,bodyTop:body.style.top,bodyLeft:body.style.left,bodyRight:body.style.right,bodyWidth:body.style.width,bodyMinHeight:body.style.minHeight,bodyOverflowAnchor:body.style.overflowAnchor};
+  const holdHeight=Math.max(document.documentElement.scrollHeight,y+window.innerHeight+260);
+  htmlEl.style.setProperty('scroll-behavior','auto','important');
+  htmlEl.style.setProperty('overflow-anchor','none','important');
+  body.style.setProperty('overflow-anchor','none','important');
+  body.style.minHeight=holdHeight+'px';
+  body.style.position='fixed';body.style.top=(-y)+'px';body.style.left='0';body.style.right='0';body.style.width='100%';
+  document.body.classList.add('dm-purchase-tab-mode');
+  document.getElementById('tabSearchBtn')?.classList.remove('active');document.getElementById('tabFavBtn')?.classList.remove('active');document.getElementById('tabListBtn')?.classList.remove('active');document.getElementById('tabPurchaseBtn')?.classList.add('active');
+  renderPurchaseTab(focusItem);
+  body.style.position=old.bodyPosition;body.style.top=old.bodyTop;body.style.left=old.bodyLeft;body.style.right=old.bodyRight;body.style.width=old.bodyWidth;
+  window.scrollTo(0,y);htmlEl.scrollTop=y;body.scrollTop=y;
+  requestAnimationFrame(()=>{
+    window.scrollTo(0,y);htmlEl.scrollTop=y;body.scrollTop=y;body.style.minHeight=old.bodyMinHeight;
+    if(old.htmlScrollBehavior)htmlEl.style.scrollBehavior=old.htmlScrollBehavior;else htmlEl.style.removeProperty('scroll-behavior');
+    if(old.htmlOverflowAnchor)htmlEl.style.overflowAnchor=old.htmlOverflowAnchor;else htmlEl.style.removeProperty('overflow-anchor');
+    if(old.bodyOverflowAnchor)body.style.overflowAnchor=old.bodyOverflowAnchor;else body.style.removeProperty('overflow-anchor');
+  });
+}
 function showPurchaseTab(focusItem,restore){
   if(!mobileMaster()){openPurchase(focusItem);return}
   const alreadyPurchase=document.body.classList.contains('dm-purchase-tab-mode')||state.activeMasterTab==='purchase';
   if(alreadyPurchase&&!focusItem)return;
   if(!alreadyPurchase&&typeof window.dmSaveBottomTabState==='function')window.dmSaveBottomTabState();
   ensurePurchaseTabUI();try{state.showFavorites=false;state.showDateList=false;state.activeMasterTab='purchase';document.body.classList.remove('favorite-mode','date-list-mode');persistMasterTab('purchase')}catch(e){}
-  document.body.classList.add('dm-purchase-tab-mode');document.getElementById('tabSearchBtn')?.classList.remove('active');document.getElementById('tabFavBtn')?.classList.remove('active');document.getElementById('tabListBtn')?.classList.remove('active');document.getElementById('tabPurchaseBtn')?.classList.add('active');renderPurchaseTab(focusItem);
-  if(!focusItem){const y=(restore||purchaseTabHasPosition)?Math.max(0,purchaseTabScrollY||0):0;requestAnimationFrame(()=>window.scrollTo({top:y,behavior:'auto'}));purchaseTabHasPosition=true}
+  if(focusItem){
+    document.body.classList.add('dm-purchase-tab-mode');document.getElementById('tabSearchBtn')?.classList.remove('active');document.getElementById('tabFavBtn')?.classList.remove('active');document.getElementById('tabListBtn')?.classList.remove('active');document.getElementById('tabPurchaseBtn')?.classList.add('active');renderPurchaseTab(focusItem);
+    return;
+  }
+  const y=(restore||purchaseTabHasPosition)?Math.max(0,purchaseTabScrollY||0):0;
+  renderPurchaseTabAtScroll(y,null);purchaseTabHasPosition=true;
 }
 function leavePurchaseTab(){
   const wasPurchase=document.body.classList.contains('dm-purchase-tab-mode')||state.activeMasterTab==='purchase';
@@ -2165,7 +2204,7 @@ function findItemFromCard(card){
   if(!card)return null;const workId=String(card.dataset.workId||'').trim();const title=String(card.querySelector('.book-title')?.textContent||'').trim();const author=String(card.querySelector('.book-meta')?.textContent||'').trim();const items=getItems();let item=workId?items.find(x=>String(x.workId??x.id??'')===workId):null;if(!item)item=items.find(x=>norm(x.title)===norm(title)&&norm(x.author)===norm(author));return item||{workId,title,author,link:card.querySelector('.book-title[href]')?.href||''}
 }
 let badgeScheduled=false;
-function refreshBadges(){badgeScheduled=false;const store=readStore();document.querySelectorAll('.card').forEach(card=>{const item=findItemFromCard(card);if(!item)return;const purchased=!!findStoredWork(item,store)?.records?.length;card.querySelectorAll('.favorite-action-btn,.favorite-toggle').forEach(btn=>{if(btn.disabled||btn.classList.contains('discontinued-action'))return;if(purchased){btn.classList.add('dm-purchased-replacement');btn.textContent=btn.classList.contains('favorite-toggle')?'구매':'구매✓';btn.setAttribute('aria-label','구매기록 보기');btn.title='구매기록 보기'}else if(btn.classList.contains('dm-purchased-replacement')){btn.classList.remove('dm-purchased-replacement');if(btn.classList.contains('favorite-toggle')){const on=btn.classList.contains('is-on');btn.textContent=on?'♥':'♡';btn.setAttribute('aria-label',on?'찜 해제':'찜하기');btn.title=''}else{const on=btn.classList.contains('is-on');btn.textContent=on?'찜됨':'찜';btn.setAttribute('aria-label',on?'찜됨':'찜하기');btn.title=on?'다른 찜목록으로 이동하거나 찜 해제':'현재 찜목록에 추가'}}})})}
+function refreshBadges(){badgeScheduled=false;const store=readStore();document.querySelectorAll('.card').forEach(card=>{const item=findItemFromCard(card);if(!item)return;const purchased=!!findStoredWork(item,store)?.records?.length;card.querySelectorAll('.favorite-action-btn,.favorite-toggle').forEach(btn=>{if(btn.disabled||btn.classList.contains('discontinued-action'))return;if(purchased){btn.classList.add('dm-purchased-replacement');btn.textContent=btn.classList.contains('favorite-toggle')?'구매':'구매한작품✓';btn.setAttribute('aria-label','구매기록 보기');btn.title='구매기록 보기'}else if(btn.classList.contains('dm-purchased-replacement')){btn.classList.remove('dm-purchased-replacement');if(btn.classList.contains('favorite-toggle')){const on=btn.classList.contains('is-on');btn.textContent=on?'♥':'♡';btn.setAttribute('aria-label',on?'찜 해제':'찜하기');btn.title=''}else{const on=btn.classList.contains('is-on');btn.textContent=on?'찜됨':'찜';btn.setAttribute('aria-label',on?'찜됨':'찜하기');btn.title=on?'다른 찜목록으로 이동하거나 찜 해제':'현재 찜목록에 추가'}}})})}
 function scheduleBadges(){if(badgeScheduled)return;badgeScheduled=true;requestAnimationFrame(refreshBadges)}
 function resultButtonText(item){return isPurchased(item)?'기록 추가':'등록'}
 async function searchWorks(){
