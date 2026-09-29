@@ -99,7 +99,7 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
 .dm-purchase-tab-panel{display:none}
 .dm-mobile-list-top-btn{display:none}
 @media(max-width:980px){
-  .dm-mobile-list-top-btn{display:inline-flex!important;align-items:center;justify-content:center;order:30;width:auto!important;min-width:52px!important;height:34px!important;min-height:34px!important;padding:0 10px!important;border:1px solid #D9DCE1!important;border-radius:4px!important;background:#fff!important;color:#52525B!important;font-size:12px!important;font-weight:700!important;line-height:1!important;box-shadow:none!important}
+  .dm-mobile-list-top-btn{display:inline-flex!important;align-items:center;justify-content:center;order:-30;width:auto!important;min-width:52px!important;height:34px!important;min-height:34px!important;padding:0 10px!important;border:1px solid #D9DCE1!important;border-radius:4px!important;background:#fff!important;color:#52525B!important;font-size:12px!important;font-weight:700!important;line-height:1!important;box-shadow:none!important}
   .event-alert-top-btn{order:-20!important}
   .mobile-menu-btn{order:40!important}
   body.dm-purchase-tab-mode .panel,
@@ -112,7 +112,9 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   body.dm-purchase-tab-mode .favorite-list-bar,
   body.dm-purchase-tab-mode .favorite-filter-bar{display:none!important}
   body.dm-purchase-tab-mode .dm-purchase-tab-panel{display:block!important}
-  .dm-purchase-tab-panel{margin:0 0 12px;padding:12px;background:#fff;border:1px solid #E5E7EB;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.035)}
+  .dm-purchase-tab-panel{margin:0 0 12px;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
+  .dm-purchase-tab-filterbox,.dm-purchase-tab-listbox{background:#fff;border:1px solid #E5E7EB;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.035);padding:12px}
+  .dm-purchase-tab-listbox{margin-top:10px}
   .dm-purchase-tab-title{margin:0 0 10px;font-size:17px;font-weight:800;color:#27272A;letter-spacing:-.03em}
   .dm-purchase-tab-filter{display:grid;grid-template-columns:minmax(0,1fr) 118px 58px;gap:7px;align-items:end;margin-bottom:9px}
   .dm-purchase-tab-field{display:grid;gap:5px;min-width:0}
@@ -129,19 +131,26 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   .dm-purchase-tab-card-author{margin:3px 0 0;font-size:12px;font-weight:600;color:#71717A}
   .dm-purchase-tab-record{border-top:1px solid #ECECF0;padding-top:8px;margin-top:8px}
   .dm-purchase-tab-record:first-of-type{margin-top:0}
-  .dm-purchase-tab-meta{display:flex;flex-wrap:wrap;gap:5px 8px;font-size:12px;line-height:1.5;color:#3F3F46}
+  .dm-purchase-tab-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;line-height:1.5;color:#3F3F46;align-items:center}
   .dm-purchase-tab-meta span{white-space:nowrap}
+  .dm-purchase-tab-meta .dm-meta-text{padding:3px 0}
+  .dm-purchase-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border:1px solid #D9DCE1;border-radius:6px;background:#F7F7F8;color:#52525B;font-weight:700}
+  .dm-purchase-chip b{font-size:10px;color:#71717A;font-weight:700}
+  .dm-purchase-chip i{font-style:normal;font-size:12px;color:#3F3F46;font-weight:800}
   .dm-purchase-tab-memo{margin-top:5px;padding:7px 8px;background:#F7F7F8;border-radius:4px;color:#52525B;font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
   .dm-purchase-tab-actions{display:flex;gap:6px;margin-top:7px}
   .dm-purchase-tab-actions button{min-height:32px;height:32px;padding:0 10px;border:1px solid #D9DCE1;border-radius:4px;background:#fff;font-size:12px;font-weight:700}
   .dm-purchase-tab-actions .dm-record-delete{color:#9B3B35;border-color:#E5C8C4}
   html[data-theme="dark"] .dm-mobile-list-top-btn{background:#242427!important;color:#E4E4E7!important;border-color:#3F3F46!important}
-  html[data-theme="dark"] .dm-purchase-tab-panel,html[data-theme="dark"] .dm-purchase-tab-card{background:#242427!important;border-color:#3F3F46!important;color:#F4F4F5!important}
+  html[data-theme="dark"] .dm-purchase-tab-filterbox,html[data-theme="dark"] .dm-purchase-tab-listbox,html[data-theme="dark"] .dm-purchase-tab-card{background:#242427!important;border-color:#3F3F46!important;color:#F4F4F5!important}
   html[data-theme="dark"] .dm-purchase-tab-title,html[data-theme="dark"] .dm-purchase-tab-card-title{color:#F4F4F5!important}
   html[data-theme="dark"] .dm-purchase-tab-card-author,html[data-theme="dark"] .dm-purchase-tab-field label,html[data-theme="dark"] .dm-purchase-tab-count{color:#A1A1AA!important}
   html[data-theme="dark"] .dm-purchase-tab-field input,html[data-theme="dark"] .dm-purchase-tab-field select{background:#1F1F22!important;color:#F4F4F5!important;border-color:#4A4A52!important}
-  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}
+  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip{background:#1F1F22!important;border-color:#4A4A52!important;color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip b{color:#A1A1AA!important}html[data-theme="dark"] .dm-purchase-chip i{color:#F4F4F5!important}
   html[data-theme="dark"] .dm-purchase-tab-memo{background:#1F1F22!important;color:#C4C4CC!important}
+  .dm-purchase-form-backdrop{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important}
+  .dm-purchase-form-modal{box-sizing:border-box!important;width:calc(100vw - 20px)!important;max-width:560px!important;min-width:0!important;margin:0 auto!important;left:auto!important;right:auto!important;transform:none!important;overflow-x:hidden!important;overscroll-behavior:contain!important;touch-action:pan-y!important}
+  .dm-purchase-form-modal *{max-width:100%;box-sizing:border-box}
   @media(max-width:430px){.dm-purchase-tab-filter{grid-template-columns:minmax(0,1fr) 108px}.dm-purchase-tab-search-btn{grid-column:1/-1;width:100%}}
 }
 
@@ -166,14 +175,14 @@ function ensurePurchaseTabUI(){
   let panel=document.getElementById('dmPurchaseTabPanel');
   if(!panel){
     panel=document.createElement('section');panel.id='dmPurchaseTabPanel';panel.className='dm-purchase-tab-panel';panel.setAttribute('aria-label','구매목록');
-    panel.innerHTML=`<h2 class="dm-purchase-tab-title">구매목록</h2><div class="dm-purchase-tab-filter"><div class="dm-purchase-tab-field"><label for="dmPurchaseTabQuery">제목·작가 검색</label><input id="dmPurchaseTabQuery" type="search" placeholder="제목 또는 작가" autocomplete="off"></div><div class="dm-purchase-tab-field"><label for="dmPurchaseTabPlatform">구매 플랫폼</label><select id="dmPurchaseTabPlatform"><option value="">전체 플랫폼</option>${PLATFORM_OPTIONS.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></div><button id="dmPurchaseTabSearchBtn" class="dm-purchase-tab-search-btn" type="button">검색</button></div><div id="dmPurchaseTabSearchResults" class="dm-purchase-tab-results"></div><p id="dmPurchaseTabCount" class="dm-purchase-tab-count"></p><div id="dmPurchaseTabList" class="dm-purchase-tab-list"></div>`;
+    panel.innerHTML=`<div class="dm-purchase-tab-filterbox"><h2 class="dm-purchase-tab-title">구매목록</h2><div class="dm-purchase-tab-filter"><div class="dm-purchase-tab-field"><label for="dmPurchaseTabQuery">제목·작가 검색</label><input id="dmPurchaseTabQuery" type="search" placeholder="제목 또는 작가" autocomplete="off"></div><div class="dm-purchase-tab-field"><label for="dmPurchaseTabPlatform">구매 플랫폼</label><select id="dmPurchaseTabPlatform"><option value="">전체 플랫폼</option>${PLATFORM_OPTIONS.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></div><button id="dmPurchaseTabSearchBtn" class="dm-purchase-tab-search-btn" type="button">검색</button></div><div id="dmPurchaseTabSearchResults" class="dm-purchase-tab-results"></div></div><div class="dm-purchase-tab-listbox"><p id="dmPurchaseTabCount" class="dm-purchase-tab-count"></p><div id="dmPurchaseTabList" class="dm-purchase-tab-list"></div></div>`;
     const list=document.getElementById('list');if(list&&list.parentNode)list.parentNode.insertBefore(panel,list);else document.querySelector('main.page')?.appendChild(panel);
   }
   const listTab=document.getElementById('tabListBtn'),menu=document.getElementById('mobileMenuBtn'),top=document.querySelector('.top-actions');
   if(mobileMaster()&&listTab&&menu&&top&&listTab.parentNode!==top){listTab.classList.remove('mobile-tab');listTab.classList.add('dm-mobile-list-top-btn');listTab.innerHTML='목록';top.insertBefore(listTab,menu)}
 }
 function purchasePlatformName(r){return r?.platform==='기타'?(r?.platformOther||'기타'):(r?.platform||'')}
-function purchaseRecordMeta(r){const out=[];if(r.amount!==''&&r.amount!=null)out.push(`<span>구매가 ${esc(money(r.amount))}</span>`);if(r.discount!==''&&r.discount!=null)out.push(`<span>할인율 ${esc(String(r.discount))}%</span>`);const platform=purchasePlatformName(r);if(platform)out.push(`<span>플랫폼 ${esc(platform)}</span>`);if(r.type)out.push(`<span>구매유형 ${esc(r.type)}</span>`);return out.join('')}
+function purchaseRecordMeta(r){const out=[];if(r.amount!==''&&r.amount!=null)out.push(`<span class="dm-meta-text">구매가 ${esc(money(r.amount))}</span>`);if(r.discount!==''&&r.discount!=null)out.push(`<span class="dm-meta-text">할인율 ${esc(String(r.discount))}%</span>`);const platform=purchasePlatformName(r);if(platform)out.push(`<span class="dm-purchase-chip"><b>플랫폼</b><i>${esc(platform)}</i></span>`);if(r.type)out.push(`<span class="dm-purchase-chip"><b>구매유형</b><i>${esc(r.type)}</i></span>`);return out.join('')}
 function filteredPurchaseWorks(){
   const store=readStore(),q=norm(document.getElementById('dmPurchaseTabQuery')?.value),platform=document.getElementById('dmPurchaseTabPlatform')?.value||'';
   return Object.values(store.works).filter(w=>Array.isArray(w.records)&&w.records.length).filter(w=>!q||norm(w.title).includes(q)||norm(w.author).includes(q)).filter(w=>!platform||w.records.some(r=>r.platform===platform)).sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'ko-KR',{numeric:true}));
@@ -231,8 +240,24 @@ function openRecordForm(item,record){
   const stored=findStoredWork(item);const base=stored||item;formContext={item:base,recordId:record?.id||null};document.getElementById('dmPurchaseFormTitle').textContent=record?'구매기록 수정':'구매기록 추가';document.getElementById('dmPurchaseFormWork').textContent=`${base.title||'(제목 없음)'} · ${base.author||'작가 정보 없음'}`;document.getElementById('dmPurchaseType').value=record?.type||'소장';document.getElementById('dmPurchasePlatform').value=PLATFORM_OPTIONS.includes(record?.platform)?record.platform:'리디';document.getElementById('dmPurchasePlatformOther').value=record?.platformOther||'';document.getElementById('dmPurchaseAmount').value=record?.amount??'';document.getElementById('dmPurchaseDiscount').value=record?.discount??'';document.getElementById('dmPurchaseDate').value=record?.date||'';document.getElementById('dmPurchaseMemo').value=record?.memo||'';syncOtherPlatform();openBackdrop('dmPurchaseFormBackdrop')
 }
 function syncOtherPlatform(){const show=document.getElementById('dmPurchasePlatform')?.value==='기타';document.getElementById('dmPlatformOtherWrap')?.classList.toggle('show',!!show)}
+function removePurchasedFromFavorites(item){
+  try{
+    const keys=new Set([String(item?.workId??item?.id??''),String(item?.link||''),`${item?.title||''}__${item?.author||''}`].filter(Boolean));
+    const raw=localStorage.getItem('dm_favorite_lists');
+    if(raw){
+      const data=JSON.parse(raw);let changed=false;
+      if(data&&data.lists&&typeof data.lists==='object'){
+        Object.keys(data.lists).forEach(id=>{const before=Array.isArray(data.lists[id])?data.lists[id]:[];const after=before.filter(k=>!keys.has(String(k)));if(after.length!==before.length){data.lists[id]=after;changed=true}});
+        if(changed)localStorage.setItem('dm_favorite_lists',JSON.stringify(data));
+      }
+    }
+    const legacyRaw=localStorage.getItem('dm_favorites');
+    if(legacyRaw){const arr=JSON.parse(legacyRaw);if(Array.isArray(arr)){const next=arr.filter(k=>!keys.has(String(k)));if(next.length!==arr.length)localStorage.setItem('dm_favorites',JSON.stringify(next))}}
+    window.dispatchEvent(new CustomEvent('dm-purchase-saved',{detail:{workId:String(item?.workId??item?.id??''),link:String(item?.link||''),title:String(item?.title||''),author:String(item?.author||'')}}));
+  }catch(e){}
+}
 function saveRecord(){
-  if(!formContext)return;const item=formContext.item;const store=readStore();let work=findStoredWork(item,store);let key=work?Object.keys(store.works).find(k=>store.works[k]===work):itemKey(item);if(!work){work={key,workId:String(item.workId??item.id??'').trim(),title:String(item.title||'').trim(),author:String(item.author||'').trim(),link:String(item.link||'').trim(),records:[]};store.works[key]=work}if(!Array.isArray(work.records))work.records=[];const amountRaw=document.getElementById('dmPurchaseAmount').value.trim(),discountRaw=document.getElementById('dmPurchaseDiscount').value.trim();const data={type:document.getElementById('dmPurchaseType').value,platform:document.getElementById('dmPurchasePlatform').value,platformOther:document.getElementById('dmPurchasePlatformOther').value.trim(),amount:amountRaw===''?'':Math.max(0,Math.round(Number(amountRaw)||0)),discount:discountRaw===''?'':Math.max(0,Math.min(100,Number(discountRaw)||0)),date:document.getElementById('dmPurchaseDate').value,memo:document.getElementById('dmPurchaseMemo').value.trim(),updatedAt:Date.now()};if(formContext.recordId){const idx=work.records.findIndex(r=>r.id===formContext.recordId);if(idx>=0)work.records[idx]={...work.records[idx],...data}}else work.records.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),createdAt:Date.now(),...data});saveStore(store);closeBackdrop('dmPurchaseFormBackdrop');renderPurchaseList(item);renderPurchaseTab(item);searchWorks();scheduleBadges()}
+  if(!formContext)return;const item=formContext.item;const store=readStore();let work=findStoredWork(item,store);let key=work?Object.keys(store.works).find(k=>store.works[k]===work):itemKey(item);if(!work){work={key,workId:String(item.workId??item.id??'').trim(),title:String(item.title||'').trim(),author:String(item.author||'').trim(),link:String(item.link||'').trim(),records:[]};store.works[key]=work}if(!Array.isArray(work.records))work.records=[];const amountRaw=document.getElementById('dmPurchaseAmount').value.trim(),discountRaw=document.getElementById('dmPurchaseDiscount').value.trim();const data={type:document.getElementById('dmPurchaseType').value,platform:document.getElementById('dmPurchasePlatform').value,platformOther:document.getElementById('dmPurchasePlatformOther').value.trim(),amount:amountRaw===''?'':Math.max(0,Math.round(Number(amountRaw)||0)),discount:discountRaw===''?'':Math.max(0,Math.min(100,Number(discountRaw)||0)),date:document.getElementById('dmPurchaseDate').value,memo:document.getElementById('dmPurchaseMemo').value.trim(),updatedAt:Date.now()};if(formContext.recordId){const idx=work.records.findIndex(r=>r.id===formContext.recordId);if(idx>=0)work.records[idx]={...work.records[idx],...data}}else work.records.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),createdAt:Date.now(),...data});saveStore(store);removePurchasedFromFavorites(item);closeBackdrop('dmPurchaseFormBackdrop');renderPurchaseList(item);renderPurchaseTab(item);searchWorks();scheduleBadges()}
 function deleteRecord(item,recordId){if(!confirm('이 구매기록을 삭제할까요?'))return;const store=readStore();const work=findStoredWork(item,store);if(!work)return;work.records=(work.records||[]).filter(r=>r.id!==recordId);if(!work.records.length){const k=Object.keys(store.works).find(k=>store.works[k]===work);if(k)delete store.works[k]}saveStore(store);renderPurchaseList();renderPurchaseTab();scheduleBadges()}
 function maskId(v){try{const bytes=new TextEncoder().encode(String(v??''));let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin).split('').reverse().join('')}catch(e){return''}}
 function unmaskId(v){try{const b64=String(v??'').split('').reverse().join(''),bin=atob(b64),bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes)}catch(e){return''}}
