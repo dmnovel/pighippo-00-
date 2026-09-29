@@ -5,6 +5,8 @@ const BACKUP_FORMAT='dm-master-backup';
 const BACKUP_VERSION=2;
 const PLATFORM_OPTIONS=['리디','교보eBook','YES24','알라딘','카카오페이지','네이버시리즈','봄툰','레진','기타'];
 const isMaster=!!document.getElementById('mobileMenuBtn');
+const state=window.__dmState;
+function persistMasterTab(tab){try{sessionStorage.setItem('dm_master_active_tab',tab)}catch{}}
 const MASTER_DATA_FILE='cefc6b96f8f7df3b.bin';
 const norm=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,'');
 const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -203,13 +205,14 @@ async function searchMasterFromPurchaseTab(){
   const hits=all.filter(x=>norm(x.title).includes(q)||norm(x.author).includes(q)).slice(0,20);box.innerHTML='';if(!hits.length){box.innerHTML='<div class="dm-empty">마스터 검색 결과가 없습니다.</div>';return}
   hits.forEach(item=>{const row=document.createElement('div');row.className='dm-purchase-search-row';row.innerHTML=`<div class="dm-purchase-search-text"><div class="dm-purchase-search-title">${esc(item.title||'(제목 없음)')}</div><div class="dm-purchase-search-author">${esc(item.author||'작가 정보 없음')}</div></div><button type="button">${resultButtonText(item)}</button>`;row.querySelector('button').addEventListener('click',()=>openRecordForm(item,null));box.appendChild(row)})
 }
-function showPurchaseTab(focusItem){
+function showPurchaseTab(focusItem,restore){
   if(!mobileMaster()){openPurchase(focusItem);return}
-  ensurePurchaseTabUI();try{state.showFavorites=false;state.showDateList=false;document.body.classList.remove('favorite-mode','date-list-mode')}catch(e){}
-  document.body.classList.add('dm-purchase-tab-mode');document.getElementById('tabSearchBtn')?.classList.remove('active');document.getElementById('tabFavBtn')?.classList.remove('active');document.getElementById('tabListBtn')?.classList.remove('active');document.getElementById('tabPurchaseBtn')?.classList.add('active');renderPurchaseTab(focusItem);if(!focusItem)window.scrollTo({top:0,behavior:'auto'})
+  ensurePurchaseTabUI();try{state.showFavorites=false;state.showDateList=false;state.activeMasterTab='purchase';document.body.classList.remove('favorite-mode','date-list-mode');persistMasterTab('purchase')}catch(e){}
+  document.body.classList.add('dm-purchase-tab-mode');document.getElementById('tabSearchBtn')?.classList.remove('active');document.getElementById('tabFavBtn')?.classList.remove('active');document.getElementById('tabListBtn')?.classList.remove('active');document.getElementById('tabPurchaseBtn')?.classList.add('active');renderPurchaseTab(focusItem);if(!focusItem&&!restore)window.scrollTo({top:0,behavior:'auto'})
 }
-function hidePurchaseTab(){document.body.classList.remove('dm-purchase-tab-mode');document.getElementById('tabPurchaseBtn')?.classList.remove('active')}
+function hidePurchaseTab(){const wasPurchase=document.body.classList.contains('dm-purchase-tab-mode')||state.activeMasterTab==='purchase';document.body.classList.remove('dm-purchase-tab-mode');document.getElementById('tabPurchaseBtn')?.classList.remove('active');if(wasPurchase){state.activeMasterTab='search';persistMasterTab('search');document.getElementById('tabSearchBtn')?.classList.add('active')}}
 function openPurchaseSurface(focusItem){if(mobileMaster())showPurchaseTab(focusItem);else openPurchase(focusItem)}
+window.dmOpenPurchaseRecord=function(item){if(item)openRecordForm(item,null)};
 function setupControls(){
   if(!isMaster)return;
   ensurePurchaseTabUI();
@@ -336,7 +339,7 @@ function bind(){
   ['tabSearchBtn','tabFavBtn','tabListBtn'].forEach(id=>document.getElementById(id)?.addEventListener('click',hidePurchaseTab,true));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeBackdrop('dmPurchaseFormBackdrop');closeBackdrop('dmPurchaseBackdrop');closeBackdrop('dmBackupBackdrop')}})
 }
-function init(){ensureStyle();makeModals();setupControls();bind();scheduleBadges();const list=document.getElementById('list');if(list)new MutationObserver(scheduleBadges).observe(list,{childList:true,subtree:true});window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY)scheduleBadges()});}
+function init(){ensureStyle();makeModals();setupControls();bind();if(isMaster&&mobileMaster()&&state.activeMasterTab==='purchase')showPurchaseTab(null,true);scheduleBadges();const list=document.getElementById('list');if(list)new MutationObserver(scheduleBadges).observe(list,{childList:true,subtree:true});window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY)scheduleBadges()});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 
