@@ -136,8 +136,8 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   .dm-purchase-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 8px;border:1px solid #D9DCE1;border-radius:6px;font-weight:700}
   .dm-purchase-chip b{font-size:10px;font-weight:700}
   .dm-purchase-chip i{font-style:normal;font-size:12px;font-weight:800}
-  .dm-chip-platform{background:#F2F0FA;border-color:#D8D0EF;color:#6E619D}
-  .dm-chip-platform b{color:#8779B5}.dm-chip-platform i{color:#5F538C}
+  .dm-chip-platform{background:#EEF6FF;border-color:#BFD9F5;color:#2563A6}
+  .dm-chip-platform b{color:#5F8FBE}.dm-chip-platform i{color:#1F5E97}
   .dm-chip-discount{background:#EEF8F1;border-color:#CAE8D2;color:#287A49}
   .dm-chip-discount b{color:#5C9470}.dm-chip-discount i{color:#21683E}
   .dm-chip-amount{background:#FFF6E8;border-color:#F0D9B5;color:#9A641B}
@@ -151,7 +151,7 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   html[data-theme="dark"] .dm-purchase-tab-title,html[data-theme="dark"] .dm-purchase-tab-card-title{color:#F4F4F5!important}
   html[data-theme="dark"] .dm-purchase-tab-card-author,html[data-theme="dark"] .dm-purchase-tab-field label,html[data-theme="dark"] .dm-purchase-tab-count{color:#A1A1AA!important}
   html[data-theme="dark"] .dm-purchase-tab-field input,html[data-theme="dark"] .dm-purchase-tab-field select{background:#1F1F22!important;color:#F4F4F5!important;border-color:#4A4A52!important}
-  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip{border-color:#4A4A52!important}html[data-theme="dark"] .dm-chip-platform{background:#312E3D!important;color:#D4C8FF!important}html[data-theme="dark"] .dm-chip-discount{background:#1E3326!important;color:#A7E2BA!important}html[data-theme="dark"] .dm-chip-amount{background:#3A2E1D!important;color:#F0D09C!important}html[data-theme="dark"] .dm-purchase-chip b{color:#B4B4BC!important}html[data-theme="dark"] .dm-purchase-chip i{color:inherit!important}
+  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip{border-color:#4A4A52!important}html[data-theme="dark"] .dm-chip-platform{background:#1E3044!important;color:#A9D2FF!important}html[data-theme="dark"] .dm-chip-discount{background:#1E3326!important;color:#A7E2BA!important}html[data-theme="dark"] .dm-chip-amount{background:#3A2E1D!important;color:#F0D09C!important}html[data-theme="dark"] .dm-purchase-chip b{color:#B4B4BC!important}html[data-theme="dark"] .dm-purchase-chip i{color:inherit!important}
   html[data-theme="dark"] .dm-purchase-tab-memo{background:#1F1F22!important;color:#C4C4CC!important}
   .dm-purchase-form-backdrop{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important}
   .dm-purchase-form-modal{box-sizing:border-box!important;width:calc(100vw - 20px)!important;max-width:560px!important;min-width:0!important;margin:0 auto!important;left:auto!important;right:auto!important;transform:none!important;overflow-x:hidden!important;overscroll-behavior:contain!important;touch-action:pan-y!important}

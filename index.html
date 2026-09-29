@@ -2039,8 +2039,8 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   .dm-purchase-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 8px;border:1px solid #D9DCE1;border-radius:6px;font-weight:700}
   .dm-purchase-chip b{font-size:10px;font-weight:700}
   .dm-purchase-chip i{font-style:normal;font-size:12px;font-weight:800}
-  .dm-chip-platform{background:#F2F0FA;border-color:#D8D0EF;color:#6E619D}
-  .dm-chip-platform b{color:#8779B5}.dm-chip-platform i{color:#5F538C}
+  .dm-chip-platform{background:#EEF6FF;border-color:#BFD9F5;color:#2563A6}
+  .dm-chip-platform b{color:#5F8FBE}.dm-chip-platform i{color:#1F5E97}
   .dm-chip-discount{background:#EEF8F1;border-color:#CAE8D2;color:#287A49}
   .dm-chip-discount b{color:#5C9470}.dm-chip-discount i{color:#21683E}
   .dm-chip-amount{background:#FFF6E8;border-color:#F0D9B5;color:#9A641B}
@@ -2054,7 +2054,7 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   html[data-theme="dark"] .dm-purchase-tab-title,html[data-theme="dark"] .dm-purchase-tab-card-title{color:#F4F4F5!important}
   html[data-theme="dark"] .dm-purchase-tab-card-author,html[data-theme="dark"] .dm-purchase-tab-field label,html[data-theme="dark"] .dm-purchase-tab-count{color:#A1A1AA!important}
   html[data-theme="dark"] .dm-purchase-tab-field input,html[data-theme="dark"] .dm-purchase-tab-field select{background:#1F1F22!important;color:#F4F4F5!important;border-color:#4A4A52!important}
-  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip{border-color:#4A4A52!important}html[data-theme="dark"] .dm-chip-platform{background:#312E3D!important;color:#D4C8FF!important}html[data-theme="dark"] .dm-chip-discount{background:#1E3326!important;color:#A7E2BA!important}html[data-theme="dark"] .dm-chip-amount{background:#3A2E1D!important;color:#F0D09C!important}html[data-theme="dark"] .dm-purchase-chip b{color:#B4B4BC!important}html[data-theme="dark"] .dm-purchase-chip i{color:inherit!important}
+  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip{border-color:#4A4A52!important}html[data-theme="dark"] .dm-chip-platform{background:#1E3044!important;color:#A9D2FF!important}html[data-theme="dark"] .dm-chip-discount{background:#1E3326!important;color:#A7E2BA!important}html[data-theme="dark"] .dm-chip-amount{background:#3A2E1D!important;color:#F0D09C!important}html[data-theme="dark"] .dm-purchase-chip b{color:#B4B4BC!important}html[data-theme="dark"] .dm-purchase-chip i{color:inherit!important}
   html[data-theme="dark"] .dm-purchase-tab-memo{background:#1F1F22!important;color:#C4C4CC!important}
   .dm-purchase-form-backdrop{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important}
   .dm-purchase-form-modal{box-sizing:border-box!important;width:calc(100vw - 20px)!important;max-width:560px!important;min-width:0!important;margin:0 auto!important;left:auto!important;right:auto!important;transform:none!important;overflow-x:hidden!important;overscroll-behavior:contain!important;touch-action:pan-y!important}
@@ -2190,38 +2190,54 @@ async function removePurchasedFromFavorites(item){
 async function reconcilePurchasedFavoritesOnLoad(){
   try{
     const store=readStore();
-    const purchased=Object.values(store.works||{}).filter(w=>w&&Array.isArray(w.records)&&w.records.length);
-    if(!purchased.length)return;
-    const keys=new Set();
-    const add=v=>{v=String(v??'').trim();if(v)keys.add(v)};
+    const purchasedEntries=Object.entries(store.works||{}).filter(([,w])=>w&&Array.isArray(w.records)&&w.records.length);
+    if(!purchasedEntries.length)return;
     const items=getItems();
-    purchased.forEach(w=>{
-      add(w.workId??w.id);add(w.link);add(`${w.title||''}__${w.author||''}`);
-      const m=items.find(x=>workMatches(x,w));
-      if(m){add(m.workId??m.id);add(m.link);add(`${m.title||''}__${m.author||''}`)}
+    const exactKeys=new Set();
+    const add=v=>{v=String(v??'').trim();if(v)exactKeys.add(v)};
+    purchasedEntries.forEach(([storeKey,w])=>{
+      // Old purchase records may have no workId in the value, while the canonical id still lives in the store key.
+      add(storeKey);add(w.workId??w.id);add(w.link);add(`${w.title||''}__${w.author||''}`);
+      const m=items.find(x=>workMatches(x,w)||String(itemKey(x))===String(storeKey));
+      if(m){add(itemKey(m));add(m.workId??m.id);add(m.link);add(`${m.title||''}__${m.author||''}`)}
     });
-    const strip=arr=>(Array.isArray(arr)?arr:[]).filter(k=>!keys.has(String(k)));
+    const purchasedWorks=purchasedEntries.map(([,w])=>w);
+    const shouldRemove=favKey=>{
+      const key=String(favKey??'').trim();
+      if(!key)return false;
+      if(exactKeys.has(key))return true;
+      const master=items.find(x=>String(itemKey(x))===key||String(x.link||'').trim()===key||`${x.title||''}__${x.author||''}`===key);
+      return !!(master&&purchasedWorks.some(w=>workMatches(master,w)));
+    };
+    const strip=arr=>(Array.isArray(arr)?arr:[]).filter(k=>!shouldRemove(k));
     let changed=false;
-    const raw=localStorage.getItem('dm_favorite_lists');
+    const raw=localStorage.getItem(FAVORITE_LISTS_STORAGE_KEY||'dm_favorite_lists');
     if(raw){
       const data=JSON.parse(raw);
       if(data&&data.lists&&typeof data.lists==='object'){
         Object.keys(data.lists).forEach(id=>{const before=Array.isArray(data.lists[id])?data.lists[id]:[];const after=strip(before);if(after.length!==before.length){data.lists[id]=after;changed=true}});
-        if(changed)localStorage.setItem('dm_favorite_lists',JSON.stringify(data));
+        if(changed)localStorage.setItem(FAVORITE_LISTS_STORAGE_KEY||'dm_favorite_lists',JSON.stringify(data));
       }
     }
-    const legacy=localStorage.getItem('dm_favorites');
-    if(legacy){const arr=JSON.parse(legacy);if(Array.isArray(arr)){const next=strip(arr);if(next.length!==arr.length){localStorage.setItem('dm_favorites',JSON.stringify(next));changed=true}}}
-    if(changed&&typeof state!=='undefined'&&state){
-      if(state.favoriteLists&&typeof state.favoriteLists==='object')Object.keys(state.favoriteLists).forEach(id=>{state.favoriteLists[id]=strip(state.favoriteLists[id])});
-      if(state.favorites&&typeof state.favorites.delete==='function')keys.forEach(k=>state.favorites.delete(k));
-      if(state.eventCartSelection&&typeof state.eventCartSelection.delete==='function')keys.forEach(k=>state.eventCartSelection.delete(k));
-      if(typeof saveFavorites==='function')saveFavorites();
-      if(typeof refreshFavoriteListUI==='function')refreshFavoriteListUI();
-      if(typeof updateBottomTabs==='function')updateBottomTabs();
-      if(typeof render==='function'&&state.showFavorites)render(false);
+    const legacy=localStorage.getItem(FAVORITE_LEGACY_KEY||'dm_favorites');
+    if(legacy){const arr=JSON.parse(legacy);if(Array.isArray(arr)){const next=strip(arr);if(next.length!==arr.length){localStorage.setItem(FAVORITE_LEGACY_KEY||'dm_favorites',JSON.stringify(next));changed=true}}}
+    if(typeof state!=='undefined'&&state){
+      if(state.favoriteLists&&typeof state.favoriteLists==='object')Object.keys(state.favoriteLists).forEach(id=>{const before=state.favoriteLists[id]||[];const after=strip(before);if(after.length!==before.length){state.favoriteLists[id]=after;changed=true}});
+      if(state.favorites&&typeof state.favorites.forEach==='function'){[...state.favorites].forEach(k=>{if(shouldRemove(k)){state.favorites.delete(k);changed=true}})}
+      if(state.eventCartSelection&&typeof state.eventCartSelection.forEach==='function'){[...state.eventCartSelection].forEach(k=>{if(shouldRemove(k))state.eventCartSelection.delete(k)})}
+      if(changed){
+        // Persist the already-cleaned in-memory lists without rebuilding them from stale pre-cleanup values.
+        localStorage.setItem(FAVORITE_LISTS_STORAGE_KEY,JSON.stringify({lists:state.favoriteLists,names:state.favoriteNames}));
+        localStorage.setItem(ACTIVE_FAVORITE_LIST_KEY,state.activeFavoriteListId);
+        localStorage.setItem(FAVORITE_LEGACY_KEY,JSON.stringify([...state.favorites]));
+        if(typeof refreshFavoriteListUI==='function')refreshFavoriteListUI();
+        if(typeof updateBottomTabs==='function')updateBottomTabs();
+        if(typeof syncActiveEventAlerts==='function')syncActiveEventAlerts();
+        if(typeof updateEventAlertButton==='function')updateEventAlertButton();
+        if(typeof render==='function'&&state.showFavorites)render(false);
+      }
     }
-  }catch(e){}
+  }catch(e){console.warn('구매작품 찜 자동정리 실패',e)}
 }
 window.dmReconcilePurchasedFavorites=reconcilePurchasedFavoritesOnLoad;
 function saveRecord(){
