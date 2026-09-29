@@ -1962,40 +1962,22 @@ function ensureStyle(){if(document.getElementById('dmPurchaseStyles'))return;con
 .purchase-top-btn,.pc-backup-btn{display:inline-flex;align-items:center;justify-content:center;min-height:36px;border:1px solid #E5E7EB;border-radius:9px;background:#fff;color:var(--brown,#6b5a50);cursor:pointer;font-weight:700;font-size:15px;padding:0 14px;box-shadow:0 1px 5px rgba(0,0,0,.035)}
 .purchase-top-btn:hover,.pc-backup-btn:hover{background:#F4F4F5}.favorite-action-btn.dm-purchased-replacement{background:#F2F0FA!important;color:#6E619D!important;border-color:#CFC7EA!important}.favorite-toggle.dm-purchased-replacement{font-size:11px!important;font-weight:700!important;letter-spacing:-.06em!important;background:#F2F0FA!important;color:#6E619D!important;border-color:#CFC7EA!important}
 .dm-purchase-backdrop,.dm-backup-backdrop,.dm-purchase-form-backdrop{position:fixed;inset:0;z-index:1200;background:rgba(20,20,24,.48);display:none;align-items:center;justify-content:center;padding:18px}.dm-purchase-backdrop.open,.dm-backup-backdrop.open,.dm-purchase-form-backdrop.open{display:flex}.dm-purchase-modal,.dm-backup-modal,.dm-purchase-form-modal{width:min(760px,100%);max-height:min(88vh,840px);overflow:auto;background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 18px 48px rgba(0,0,0,.22);padding:18px}.dm-backup-modal{width:min(520px,100%)}.dm-purchase-form-modal{width:min(560px,100%)}
-.dm-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.dm-modal-head h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.03em}.dm-modal-close{width:38px;height:38px;padding:0;border:1px solid #E5E7EB;border-radius:8px;background:#fff;font-size:24px;line-height:1;color:#52525B}.dm-purchase-addbox{padding:12px;border:1px solid #E5E7EB;border-radius:10px;background:#F7F7F8;margin-bottom:14px}.dm-purchase-addrow{display:grid;grid-template-columns:1fr auto;gap:8px}.dm-purchase-addrow input{min-width:0}.dm-purchase-search-results{display:grid;gap:7px;margin-top:9px}.dm-purchase-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 10px;border:1px solid #E5E7EB;border-radius:8px;background:#fff}.dm-purchase-search-text{min-width:0}.dm-purchase-search-title{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dm-purchase-search-author{margin-top:2px;color:#71717A;font-size:12px;font-weight:600}.dm-purchase-search-row button,.dm-record-btn,.dm-record-edit,.dm-record-delete,.dm-work-delete,.dm-backup-actions button,.dm-form-actions button{min-height:36px;border-radius:7px;border:1px solid #D9DCE1;background:#fff;font-size:13px;font-weight:700;padding:0 12px}.dm-purchase-search-row button,.dm-record-btn,.dm-form-save,.dm-backup-primary{background:#9370DB!important;border-color:#9370DB!important;color:#fff!important}.dm-work-list{display:grid;gap:10px}.dm-work-card{border:1px solid #E5E7EB;border-radius:10px;padding:12px;background:#fff}.dm-work-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.dm-work-title{margin:0;font-size:15px;font-weight:700;line-height:1.35}.dm-work-author{margin:3px 0 0;color:#71717A;font-size:12px;font-weight:600}.dm-work-tools{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.dm-record-edit{color:#52525B!important}.dm-work-delete,.dm-record-delete{color:#9B3B35;border-color:#E5C8C4}.dm-record-list{display:grid;gap:7px;margin-top:10px}.dm-record{border-top:1px solid #ECECF0;padding-top:9px}.dm-record-summary{font-size:13px;line-height:1.55;color:#3F3F46}.dm-record-memo{margin-top:4px;color:#71717A;font-size:12px;white-space:pre-wrap;word-break:break-word}.dm-record-actions{display:flex;gap:6px;margin-top:7px}.dm-empty{padding:22px 8px;text-align:center;color:#71717A;font-size:13px;border:1px dashed #D9DCE1;border-radius:9px}.dm-purchase-count{margin:0 0 9px;color:#52525B;font-size:13px;font-weight:700}.dm-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.dm-field{display:grid;gap:5px}.dm-field.full{grid-column:1/-1}.dm-field label{font-size:12px;font-weight:700;color:#52525B}.dm-field input,.dm-field select,.dm-field textarea,.dm-purchase-addrow input{width:100%;min-height:42px;border:1px solid #D9DCE1;border-radius:7px;background:#fff;color:#27272A;font-size:16px;padding:8px 10px}.dm-field textarea{min-height:88px;resize:vertical}.dm-platform-other{display:none}.dm-platform-other.show{display:grid}.dm-form-actions,.dm-backup-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;flex-wrap:wrap}.dm-backup-desc{margin:0 0 14px;color:#52525B;font-size:13px;line-height:1.55}.dm-backup-pc-wrap{display:flex;justify-content:flex-end;margin:-2px 0 8px}.pc-backup-btn{min-height:32px;border-radius:7px;font-size:13px;padding:0 11px}#dmBackupFile{display:none!important}#dmBackupImport{color:#52525B!important}html[data-theme="dark"] #dmBackupImport{color:#E4E4E7!important}
+.dm-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.dm-modal-head h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.03em}.dm-modal-close{width:38px;height:38px;padding:0;border:1px solid #E5E7EB;border-radius:8px;background:#fff;font-size:24px;line-height:1;color:#52525B}.dm-purchase-addbox{padding:12px;border:1px solid #E5E7EB;border-radius:10px;background:#F7F7F8;margin-bottom:14px}.dm-purchase-addrow{display:grid;grid-template-columns:1fr auto;gap:8px}.dm-purchase-addrow input{min-width:0}.dm-purchase-search-results{display:grid;gap:7px;margin-top:9px}.dm-purchase-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 10px;border:1px solid #E5E7EB;border-radius:8px;background:#fff}.dm-purchase-search-text{min-width:0}.dm-purchase-search-title{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dm-purchase-search-author{margin-top:2px;color:#71717A;font-size:12px;font-weight:600}.dm-purchase-search-row button,.dm-record-btn,.dm-record-edit,.dm-record-delete,.dm-work-delete,.dm-backup-actions button,.dm-form-actions button{min-height:36px;border-radius:7px;border:1px solid #D9DCE1;background:#fff;font-size:13px;font-weight:700;padding:0 12px}.dm-purchase-search-row button,.dm-record-btn,.dm-form-save,.dm-backup-primary{background:#9370DB!important;border-color:#9370DB!important;color:#fff!important}.dm-work-list{display:grid;gap:10px}.dm-work-card{border:1px solid #E5E7EB;border-radius:10px;padding:12px;background:#fff}.dm-work-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.dm-work-title{margin:0;font-size:15px;font-weight:700;line-height:1.35}.dm-work-author{margin:3px 0 0;color:#71717A;font-size:12px;font-weight:600}.dm-record-edit{color:#52525B!important}.dm-work-delete,.dm-record-delete{color:#9B3B35;border-color:#E5C8C4}.dm-record-list{display:grid;gap:7px;margin-top:10px}.dm-record{border-top:1px solid #ECECF0;padding-top:9px}.dm-record-summary{font-size:13px;line-height:1.55;color:#3F3F46}.dm-record-memo{margin-top:4px;color:#71717A;font-size:12px;white-space:pre-wrap;word-break:break-word}.dm-record-actions{display:flex;gap:6px;margin-top:7px}.dm-empty{padding:22px 8px;text-align:center;color:#71717A;font-size:13px;border:1px dashed #D9DCE1;border-radius:9px}.dm-purchase-count{margin:0 0 9px;color:#52525B;font-size:13px;font-weight:700}.dm-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.dm-field{display:grid;gap:5px}.dm-field.full{grid-column:1/-1}.dm-field label{font-size:12px;font-weight:700;color:#52525B}.dm-field input,.dm-field select,.dm-field textarea,.dm-purchase-addrow input{width:100%;min-height:42px;border:1px solid #D9DCE1;border-radius:7px;background:#fff;color:#27272A;font-size:16px;padding:8px 10px}.dm-field textarea{min-height:88px;resize:vertical}.dm-platform-other{display:none}.dm-platform-other.show{display:grid}.dm-form-actions,.dm-backup-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;flex-wrap:wrap}.dm-backup-desc{margin:0 0 14px;color:#52525B;font-size:13px;line-height:1.55}.dm-backup-pc-wrap{display:flex;justify-content:flex-end;margin:-2px 0 8px}.pc-backup-btn{min-height:32px;border-radius:7px;font-size:13px;padding:0 11px}#dmBackupFile{display:none!important}#dmBackupImport{color:#52525B!important}html[data-theme="dark"] #dmBackupImport{color:#E4E4E7!important}
 html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn,html[data-theme="dark"] .dm-modal-close,html[data-theme="dark"] .dm-record-btn,html[data-theme="dark"] .dm-record-edit,html[data-theme="dark"] .dm-record-delete,html[data-theme="dark"] .dm-work-delete,html[data-theme="dark"] .dm-backup-actions button,html[data-theme="dark"] .dm-form-actions button{background:#242427;color:#E4E4E7;border-color:#3F3F46}html[data-theme="dark"] .favorite-action-btn.dm-purchased-replacement,html[data-theme="dark"] .favorite-toggle.dm-purchased-replacement{background:#312E3D!important;border-color:#4A4657!important;color:#C4B5FD!important}html[data-theme="dark"] .dm-purchase-modal,html[data-theme="dark"] .dm-backup-modal,html[data-theme="dark"] .dm-purchase-form-modal,html[data-theme="dark"] .dm-work-card,html[data-theme="dark"] .dm-purchase-search-row{background:#242427;color:#F4F4F5;border-color:#3F3F46}html[data-theme="dark"] .dm-purchase-addbox{background:#1F1F22;border-color:#3F3F46}html[data-theme="dark"] .dm-field input,html[data-theme="dark"] .dm-field select,html[data-theme="dark"] .dm-field textarea,html[data-theme="dark"] .dm-purchase-addrow input{background:#1F1F22;border-color:#4A4A52;color:#F4F4F5}html[data-theme="dark"] .dm-record-summary,html[data-theme="dark"] .dm-purchase-count{color:#E4E4E7}html[data-theme="dark"] .dm-work-author,html[data-theme="dark"] .dm-record-memo,html[data-theme="dark"] .dm-backup-desc,html[data-theme="dark"] .dm-field label{color:#A1A1AA}
-@media(max-width:980px){.purchase-top-btn,.dm-backup-pc-wrap{display:none!important}.dm-purchase-backdrop,.dm-backup-backdrop,.dm-purchase-form-backdrop{padding:10px;align-items:flex-end}.dm-purchase-modal,.dm-backup-modal,.dm-purchase-form-modal{max-height:88vh;border-radius:14px 14px 0 0;padding:15px}.dm-form-grid{grid-template-columns:1fr}.dm-field.full{grid-column:auto}.dm-purchase-addrow{grid-template-columns:1fr auto}.dm-work-head{display:block}.dm-work-tools{justify-content:flex-start;margin-top:9px}.dm-purchase-search-title{white-space:normal}}
-
-/* 20260929 UI sizing patch: compact PC top buttons + device-safe purchase form */
+@media(max-width:980px){
+  .purchase-top-btn,.dm-backup-pc-wrap{display:none!important}
+  .dm-backup-backdrop{padding:10px;align-items:flex-end}
+  .dm-backup-modal{max-height:88vh;border-radius:14px 14px 0 0;padding:15px}
+  .dm-purchase-backdrop,.dm-purchase-form-backdrop{align-items:center;padding:10px}
+  .dm-purchase-modal{width:min(94vw,760px);max-width:calc(100vw - 20px);max-height:72vh;max-height:72dvh;overflow-y:auto;border-radius:14px;padding:15px;overscroll-behavior:contain}
+  .dm-purchase-form-modal{width:min(94vw,520px);max-width:calc(100vw - 20px);max-height:78vh;max-height:78dvh;overflow-y:auto;border-radius:14px;padding:14px;overscroll-behavior:contain}
+  .dm-form-grid{grid-template-columns:1fr}.dm-field.full{grid-column:auto}.dm-purchase-addrow{grid-template-columns:1fr auto}.dm-work-head{display:block}.dm-purchase-search-title{white-space:normal}
+}
 @media(min-width:981px){
-  .top-actions{gap:8px!important;justify-content:flex-start!important;}
-  .top-actions>.ridi-top-btn,
-  .top-actions>.top-menu-btn,
-  .top-actions>.heart-top-btn,
-  .top-actions>.purchase-top-btn,
-  .top-actions>.pc-theme-top-btn,
-  .top-actions>.event-alert-top-btn{
-    flex:0 0 auto!important;width:max-content!important;min-width:0!important;max-width:max-content!important;
-    height:36px!important;min-height:36px!important;padding:0 13px!important;box-sizing:border-box!important;
-    border-radius:4px!important;font-size:13px!important;box-shadow:none!important;white-space:nowrap!important;
-  }
-  .top-actions>.event-alert-top-btn{padding:0 12px!important;font-size:18px!important;}
-}
-@media(max-width:980px){
-  .dm-purchase-backdrop{align-items:center!important;padding:10px!important;}
-  .dm-purchase-modal{
-    width:min(94vw,760px)!important;max-width:calc(100vw - 20px)!important;
-    max-height:72vh!important;max-height:72dvh!important;overflow-y:auto!important;
-    border-radius:14px!important;padding:15px!important;overscroll-behavior:contain;
-  }
-}
-@media(max-width:980px){
-  .dm-purchase-form-backdrop{align-items:center!important;padding:10px!important;}
-  .dm-purchase-form-modal{
-    width:min(94vw,520px)!important;max-width:calc(100vw - 20px)!important;
-    max-height:78vh!important;max-height:78dvh!important;overflow-y:auto!important;
-    border-radius:14px!important;padding:14px!important;overscroll-behavior:contain;
-  }
+  .top-actions{gap:8px!important;justify-content:flex-start!important}
+  .top-actions>.ridi-top-btn,.top-actions>.top-menu-btn,.top-actions>.heart-top-btn,.top-actions>.purchase-top-btn,.top-actions>.pc-theme-top-btn,.top-actions>.event-alert-top-btn{flex:0 0 auto!important;width:max-content!important;min-width:0!important;max-width:max-content!important;height:36px!important;min-height:36px!important;padding:0 13px!important;box-sizing:border-box!important;border-radius:4px!important;font-size:13px!important;box-shadow:none!important;white-space:nowrap!important}
+  .top-actions>.event-alert-top-btn{padding:0 12px!important;font-size:18px!important}
+  #purchaseTopBtn.purchase-top-btn{flex:0 0 68px!important;width:68px!important;min-width:68px!important;max-width:68px!important;height:36px!important;min-height:36px!important;padding:0 8px!important}
 }
 
 /* mobile purchase tab + moved date-list button */
@@ -2196,17 +2178,17 @@ async function reconcilePurchasedFavoritesOnLoad(){
     const exactKeys=new Set();
     const add=v=>{v=String(v??'').trim();if(v)exactKeys.add(v)};
     purchasedEntries.forEach(([storeKey,w])=>{
-      // Old purchase records may have no workId in the value, while the canonical id still lives in the store key.
-      add(storeKey);add(w.workId??w.id);add(w.link);add(`${w.title||''}__${w.author||''}`);
-      const m=items.find(x=>workMatches(x,w)||String(itemKey(x))===String(storeKey));
-      if(m){add(itemKey(m));add(m.workId??m.id);add(m.link);add(`${m.title||''}__${m.author||''}`)}
+      // Old and current purchase records can identify a work by store key, workId, link, or title+author. Keep all forms.
+      add(storeKey);add(w.workId??w.id);add(w.link);add(`${w.title||''}__${w.author||''}`);add('ta:'+norm(w.title)+'|'+norm(w.author));
+      const m=items.find(x=>workMatches(x,w)||String(itemKey(x))===String(storeKey)||String(x.link||'').trim()===String(storeKey));
+      if(m){add(itemKey(m));add(m.workId??m.id);add(m.link);add(`${m.title||''}__${m.author||''}`);add('ta:'+norm(m.title)+'|'+norm(m.author))}
     });
     const purchasedWorks=purchasedEntries.map(([,w])=>w);
     const shouldRemove=favKey=>{
       const key=String(favKey??'').trim();
       if(!key)return false;
       if(exactKeys.has(key))return true;
-      const master=items.find(x=>String(itemKey(x))===key||String(x.link||'').trim()===key||`${x.title||''}__${x.author||''}`===key);
+      const master=items.find(x=>String(itemKey(x))===key||String(x.workId??x.id??'').trim()===key||String(x.link||'').trim()===key||`${x.title||''}__${x.author||''}`===key||('ta:'+norm(x.title)+'|'+norm(x.author))===key);
       return !!(master&&purchasedWorks.some(w=>workMatches(master,w)));
     };
     const strip=arr=>(Array.isArray(arr)?arr:[]).filter(k=>!shouldRemove(k));
@@ -2240,6 +2222,11 @@ async function reconcilePurchasedFavoritesOnLoad(){
   }catch(e){console.warn('구매작품 찜 자동정리 실패',e)}
 }
 window.dmReconcilePurchasedFavorites=reconcilePurchasedFavoritesOnLoad;
+function dmScheduleFavoritePurchaseCleanup(attempt=0){
+  try{if(getItems().length){reconcilePurchasedFavoritesOnLoad();return}}catch(e){}
+  if(attempt<80)setTimeout(()=>dmScheduleFavoritePurchaseCleanup(attempt+1),125);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>dmScheduleFavoritePurchaseCleanup(),{once:true});else dmScheduleFavoritePurchaseCleanup();
 function saveRecord(){
   if(!formContext)return;const item=formContext.item;const store=readStore();let work=findStoredWork(item,store);let key=work?Object.keys(store.works).find(k=>store.works[k]===work):itemKey(item);if(!work){work={key,workId:String(item.workId??item.id??'').trim(),title:String(item.title||'').trim(),author:String(item.author||'').trim(),link:String(item.link||'').trim(),records:[]};store.works[key]=work}if(!Array.isArray(work.records))work.records=[];const amountRaw=document.getElementById('dmPurchaseAmount').value.trim(),discountRaw=document.getElementById('dmPurchaseDiscount').value.trim();const data={type:document.getElementById('dmPurchaseType').value,platform:document.getElementById('dmPurchasePlatform').value,platformOther:document.getElementById('dmPurchasePlatformOther').value.trim(),amount:amountRaw===''?'':Math.max(0,Math.round(Number(amountRaw)||0)),discount:discountRaw===''?'':Math.max(0,Math.min(100,Number(discountRaw)||0)),date:document.getElementById('dmPurchaseDate').value,memo:document.getElementById('dmPurchaseMemo').value.trim(),updatedAt:Date.now()};if(formContext.recordId){const idx=work.records.findIndex(r=>r.id===formContext.recordId);if(idx>=0)work.records[idx]={...work.records[idx],...data}}else work.records.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),createdAt:Date.now(),...data});saveStore(store);removePurchasedFromFavorites(item);closeBackdrop('dmPurchaseFormBackdrop');renderPurchaseList(item);
   const wasNewPurchase=!formContext.recordId;
