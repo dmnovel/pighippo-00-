@@ -5,7 +5,7 @@ const BACKUP_FORMAT='dm-master-backup';
 const BACKUP_VERSION=2;
 const PLATFORM_OPTIONS=['리디','교보eBook','YES24','알라딘','카카오페이지','네이버시리즈','봄툰','레진','기타'];
 const isMaster=!!document.getElementById('mobileMenuBtn');
-const MASTER_DATA_FILE='works.json';
+const MASTER_DATA_FILE='cefc6b96f8f7df3b.bin';
 const norm=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,'');
 const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 function readStore(){
