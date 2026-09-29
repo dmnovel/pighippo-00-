@@ -1750,14 +1750,14 @@ html[data-theme="dark"] .keyword-chip .keyword-chip-remove:hover,html[data-theme
 }
 </style>
 
-<style id="favorite-card-layout-clean-v2">
+<style id="favorite-card-layout-clean-v3">
 @media(max-width:980px){
   body.favorite-mode .card{
     display:grid!important;
     grid-template-columns:minmax(0,1fr) auto!important;
     grid-template-rows:auto auto!important;
     column-gap:8px!important;
-    row-gap:0!important;
+    row-gap:10px!important;
     padding:16px 52px 14px 16px!important;
     min-height:0!important;
     align-items:start!important;
@@ -1765,33 +1765,33 @@ html[data-theme="dark"] .keyword-chip .keyword-chip-remove:hover,html[data-theme
   body.favorite-mode .card .card-info{
     grid-column:1/-1!important;grid-row:1!important;
     padding:0 0 12px!important;margin:0!important;min-width:0!important;
+    border-bottom:1px solid var(--line)!important;
   }
   body.favorite-mode .card .card-middle{
     grid-column:1!important;grid-row:2!important;
     width:auto!important;max-width:none!important;min-width:0!important;
-    justify-self:stretch!important;align-self:center!important;text-align:left!important;
-    border-top:1px solid var(--line)!important;
-    padding-top:12px!important;margin:0!important;
+    justify-self:start!important;align-self:center!important;text-align:left!important;
+    border-top:0!important;padding:0!important;margin:0!important;
   }
   body.favorite-mode .card .book-history-inline{
     display:flex!important;align-items:center!important;justify-content:flex-start!important;
-    gap:6px!important;flex-wrap:wrap!important;
+    gap:6px!important;flex-wrap:nowrap!important;
   }
   body.favorite-mode .card .card-actions{
     grid-column:2!important;grid-row:2!important;
     display:flex!important;align-items:center!important;justify-content:flex-end!important;
     gap:6px!important;width:auto!important;min-width:0!important;
-    border-top:1px solid var(--line)!important;
-    padding-top:12px!important;margin:0!important;
+    border-top:0!important;padding:0!important;margin:0!important;
   }
   body.favorite-mode .card .card-actions .history-btn,
   body.favorite-mode .card .card-actions .favorite-action-btn{
-    width:auto!important;min-width:60px!important;max-width:none!important;
+    width:auto!important;min-width:52px!important;max-width:none!important;
     min-height:30px!important;height:30px!important;padding:0 9px!important;
     font-size:12px!important;line-height:1!important;
   }
   body.favorite-mode .card .history-pill{
-    min-height:30px!important;height:30px!important;padding:0 8px!important;font-size:12px!important;
+    min-height:30px!important;height:30px!important;padding:0 9px!important;font-size:12px!important;
+    white-space:nowrap!important;
   }
 }
 </style>
@@ -2180,6 +2180,43 @@ async function removePurchasedFromFavorites(item){
     window.dispatchEvent(new CustomEvent('dm-purchase-saved',{detail:{workId:String(masterItem?.workId??item?.workId??item?.id??''),link:String((masterItem?.link??item?.link)||''),title:String((masterItem?.title??item?.title)||''),author:String((masterItem?.author??item?.author)||'')}}));
   }catch(e){}
 }
+async function reconcilePurchasedFavoritesOnLoad(){
+  try{
+    const store=readStore();
+    const purchased=Object.values(store.works||{}).filter(w=>w&&Array.isArray(w.records)&&w.records.length);
+    if(!purchased.length)return;
+    const keys=new Set();
+    const add=v=>{v=String(v??'').trim();if(v)keys.add(v)};
+    const items=getItems();
+    purchased.forEach(w=>{
+      add(w.workId??w.id);add(w.link);add(`${w.title||''}__${w.author||''}`);
+      const m=items.find(x=>workMatches(x,w));
+      if(m){add(m.workId??m.id);add(m.link);add(`${m.title||''}__${m.author||''}`)}
+    });
+    const strip=arr=>(Array.isArray(arr)?arr:[]).filter(k=>!keys.has(String(k)));
+    let changed=false;
+    const raw=localStorage.getItem('dm_favorite_lists');
+    if(raw){
+      const data=JSON.parse(raw);
+      if(data&&data.lists&&typeof data.lists==='object'){
+        Object.keys(data.lists).forEach(id=>{const before=Array.isArray(data.lists[id])?data.lists[id]:[];const after=strip(before);if(after.length!==before.length){data.lists[id]=after;changed=true}});
+        if(changed)localStorage.setItem('dm_favorite_lists',JSON.stringify(data));
+      }
+    }
+    const legacy=localStorage.getItem('dm_favorites');
+    if(legacy){const arr=JSON.parse(legacy);if(Array.isArray(arr)){const next=strip(arr);if(next.length!==arr.length){localStorage.setItem('dm_favorites',JSON.stringify(next));changed=true}}}
+    if(changed&&typeof state!=='undefined'&&state){
+      if(state.favoriteLists&&typeof state.favoriteLists==='object')Object.keys(state.favoriteLists).forEach(id=>{state.favoriteLists[id]=strip(state.favoriteLists[id])});
+      if(state.favorites&&typeof state.favorites.delete==='function')keys.forEach(k=>state.favorites.delete(k));
+      if(state.eventCartSelection&&typeof state.eventCartSelection.delete==='function')keys.forEach(k=>state.eventCartSelection.delete(k));
+      if(typeof saveFavorites==='function')saveFavorites();
+      if(typeof refreshFavoriteListUI==='function')refreshFavoriteListUI();
+      if(typeof updateBottomTabs==='function')updateBottomTabs();
+      if(typeof render==='function'&&state.showFavorites)render(false);
+    }
+  }catch(e){}
+}
+window.dmReconcilePurchasedFavorites=reconcilePurchasedFavoritesOnLoad;
 function saveRecord(){
   if(!formContext)return;const item=formContext.item;const store=readStore();let work=findStoredWork(item,store);let key=work?Object.keys(store.works).find(k=>store.works[k]===work):itemKey(item);if(!work){work={key,workId:String(item.workId??item.id??'').trim(),title:String(item.title||'').trim(),author:String(item.author||'').trim(),link:String(item.link||'').trim(),records:[]};store.works[key]=work}if(!Array.isArray(work.records))work.records=[];const amountRaw=document.getElementById('dmPurchaseAmount').value.trim(),discountRaw=document.getElementById('dmPurchaseDiscount').value.trim();const data={type:document.getElementById('dmPurchaseType').value,platform:document.getElementById('dmPurchasePlatform').value,platformOther:document.getElementById('dmPurchasePlatformOther').value.trim(),amount:amountRaw===''?'':Math.max(0,Math.round(Number(amountRaw)||0)),discount:discountRaw===''?'':Math.max(0,Math.min(100,Number(discountRaw)||0)),date:document.getElementById('dmPurchaseDate').value,memo:document.getElementById('dmPurchaseMemo').value.trim(),updatedAt:Date.now()};if(formContext.recordId){const idx=work.records.findIndex(r=>r.id===formContext.recordId);if(idx>=0)work.records[idx]={...work.records[idx],...data}}else work.records.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),createdAt:Date.now(),...data});saveStore(store);removePurchasedFromFavorites(item);closeBackdrop('dmPurchaseFormBackdrop');renderPurchaseList(item);
   const wasNewPurchase=!formContext.recordId;
