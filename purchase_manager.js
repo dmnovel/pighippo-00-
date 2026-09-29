@@ -133,10 +133,15 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   .dm-purchase-tab-record:first-of-type{margin-top:0}
   .dm-purchase-tab-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;line-height:1.5;color:#3F3F46;align-items:center}
   .dm-purchase-tab-meta span{white-space:nowrap}
-  .dm-purchase-tab-meta .dm-meta-text{padding:3px 0}
-  .dm-purchase-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border:1px solid #D9DCE1;border-radius:6px;background:#F7F7F8;color:#52525B;font-weight:700}
-  .dm-purchase-chip b{font-size:10px;color:#71717A;font-weight:700}
-  .dm-purchase-chip i{font-style:normal;font-size:12px;color:#3F3F46;font-weight:800}
+  .dm-purchase-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 8px;border:1px solid #D9DCE1;border-radius:6px;font-weight:700}
+  .dm-purchase-chip b{font-size:10px;font-weight:700}
+  .dm-purchase-chip i{font-style:normal;font-size:12px;font-weight:800}
+  .dm-chip-platform{background:#F2F0FA;border-color:#D8D0EF;color:#6E619D}
+  .dm-chip-platform b{color:#8779B5}.dm-chip-platform i{color:#5F538C}
+  .dm-chip-discount{background:#EEF8F1;border-color:#CAE8D2;color:#287A49}
+  .dm-chip-discount b{color:#5C9470}.dm-chip-discount i{color:#21683E}
+  .dm-chip-amount{background:#FFF6E8;border-color:#F0D9B5;color:#9A641B}
+  .dm-chip-amount b{color:#AE8247}.dm-chip-amount i{color:#815313}
   .dm-purchase-tab-memo{margin-top:5px;padding:7px 8px;background:#F7F7F8;border-radius:4px;color:#52525B;font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
   .dm-purchase-tab-actions{display:flex;gap:6px;margin-top:7px}
   .dm-purchase-tab-actions button{min-height:32px;height:32px;padding:0 10px;border:1px solid #D9DCE1;border-radius:4px;background:#fff;font-size:12px;font-weight:700}
@@ -146,11 +151,17 @@ html[data-theme="dark"] .purchase-top-btn,html[data-theme="dark"] .pc-backup-btn
   html[data-theme="dark"] .dm-purchase-tab-title,html[data-theme="dark"] .dm-purchase-tab-card-title{color:#F4F4F5!important}
   html[data-theme="dark"] .dm-purchase-tab-card-author,html[data-theme="dark"] .dm-purchase-tab-field label,html[data-theme="dark"] .dm-purchase-tab-count{color:#A1A1AA!important}
   html[data-theme="dark"] .dm-purchase-tab-field input,html[data-theme="dark"] .dm-purchase-tab-field select{background:#1F1F22!important;color:#F4F4F5!important;border-color:#4A4A52!important}
-  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip{background:#1F1F22!important;border-color:#4A4A52!important;color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip b{color:#A1A1AA!important}html[data-theme="dark"] .dm-purchase-chip i{color:#F4F4F5!important}
+  html[data-theme="dark"] .dm-purchase-tab-meta{color:#D4D4D8!important}html[data-theme="dark"] .dm-purchase-chip{border-color:#4A4A52!important}html[data-theme="dark"] .dm-chip-platform{background:#312E3D!important;color:#D4C8FF!important}html[data-theme="dark"] .dm-chip-discount{background:#1E3326!important;color:#A7E2BA!important}html[data-theme="dark"] .dm-chip-amount{background:#3A2E1D!important;color:#F0D09C!important}html[data-theme="dark"] .dm-purchase-chip b{color:#B4B4BC!important}html[data-theme="dark"] .dm-purchase-chip i{color:inherit!important}
   html[data-theme="dark"] .dm-purchase-tab-memo{background:#1F1F22!important;color:#C4C4CC!important}
   .dm-purchase-form-backdrop{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important}
   .dm-purchase-form-modal{box-sizing:border-box!important;width:calc(100vw - 20px)!important;max-width:560px!important;min-width:0!important;margin:0 auto!important;left:auto!important;right:auto!important;transform:none!important;overflow-x:hidden!important;overscroll-behavior:contain!important;touch-action:pan-y!important}
   .dm-purchase-form-modal *{max-width:100%;box-sizing:border-box}
+  body.favorite-mode .card{border-radius:4px!important;padding:16px 52px 16px 16px!important;min-height:150px!important;gap:12px!important}
+  body.favorite-mode .card .book-title{font-size:15px!important;line-height:1.35!important;font-weight:800!important}
+  body.favorite-mode .card .book-meta{font-size:12px!important;line-height:1.5!important}
+  body.favorite-mode .card .history-pill{font-size:12px!important;min-height:30px!important;padding:0 9px!important}
+  body.favorite-mode .card .card-actions{gap:8px!important}
+  body.favorite-mode .card .history-btn,body.favorite-mode .card .favorite-action-btn{min-height:40px!important;font-size:13px!important}
   @media(max-width:430px){.dm-purchase-tab-filter{grid-template-columns:minmax(0,1fr) 108px}.dm-purchase-tab-search-btn{grid-column:1/-1;width:100%}}
 }
 
@@ -182,7 +193,7 @@ function ensurePurchaseTabUI(){
   if(mobileMaster()&&listTab&&menu&&top&&listTab.parentNode!==top){listTab.classList.remove('mobile-tab');listTab.classList.add('dm-mobile-list-top-btn');listTab.innerHTML='목록';top.insertBefore(listTab,menu)}
 }
 function purchasePlatformName(r){return r?.platform==='기타'?(r?.platformOther||'기타'):(r?.platform||'')}
-function purchaseRecordMeta(r){const out=[];if(r.amount!==''&&r.amount!=null)out.push(`<span class="dm-meta-text">구매가 ${esc(money(r.amount))}</span>`);if(r.discount!==''&&r.discount!=null)out.push(`<span class="dm-meta-text">할인율 ${esc(String(r.discount))}%</span>`);const platform=purchasePlatformName(r);if(platform)out.push(`<span class="dm-purchase-chip"><b>플랫폼</b><i>${esc(platform)}</i></span>`);if(r.type)out.push(`<span class="dm-purchase-chip"><b>구매유형</b><i>${esc(r.type)}</i></span>`);return out.join('')}
+function purchaseRecordMeta(r){const out=[];const platform=purchasePlatformName(r);if(platform)out.push(`<span class="dm-purchase-chip dm-chip-platform"><b>플랫폼</b><i>${esc(platform)}</i></span>`);if(r.discount!==''&&r.discount!=null)out.push(`<span class="dm-purchase-chip dm-chip-discount"><b>구매할인율</b><i>${esc(String(r.discount))}%</i></span>`);if(r.amount!==''&&r.amount!=null)out.push(`<span class="dm-purchase-chip dm-chip-amount"><b>구매가</b><i>${esc(money(r.amount))}</i></span>`);return out.join('')}
 function filteredPurchaseWorks(){
   const store=readStore(),q=norm(document.getElementById('dmPurchaseTabQuery')?.value),platform=document.getElementById('dmPurchaseTabPlatform')?.value||'';
   return Object.values(store.works).filter(w=>Array.isArray(w.records)&&w.records.length).filter(w=>!q||norm(w.title).includes(q)||norm(w.author).includes(q)).filter(w=>!platform||w.records.some(r=>r.platform===platform)).sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'ko-KR',{numeric:true}));
@@ -243,16 +254,28 @@ function syncOtherPlatform(){const show=document.getElementById('dmPurchasePlatf
 function removePurchasedFromFavorites(item){
   try{
     const keys=new Set([String(item?.workId??item?.id??''),String(item?.link||''),`${item?.title||''}__${item?.author||''}`].filter(Boolean));
+    const removeKeys=arr=>(Array.isArray(arr)?arr:[]).filter(k=>!keys.has(String(k)));
     const raw=localStorage.getItem('dm_favorite_lists');
     if(raw){
       const data=JSON.parse(raw);let changed=false;
       if(data&&data.lists&&typeof data.lists==='object'){
-        Object.keys(data.lists).forEach(id=>{const before=Array.isArray(data.lists[id])?data.lists[id]:[];const after=before.filter(k=>!keys.has(String(k)));if(after.length!==before.length){data.lists[id]=after;changed=true}});
+        Object.keys(data.lists).forEach(id=>{const before=Array.isArray(data.lists[id])?data.lists[id]:[];const after=removeKeys(before);if(after.length!==before.length){data.lists[id]=after;changed=true}});
         if(changed)localStorage.setItem('dm_favorite_lists',JSON.stringify(data));
       }
     }
     const legacyRaw=localStorage.getItem('dm_favorites');
-    if(legacyRaw){const arr=JSON.parse(legacyRaw);if(Array.isArray(arr)){const next=arr.filter(k=>!keys.has(String(k)));if(next.length!==arr.length)localStorage.setItem('dm_favorites',JSON.stringify(next))}}
+    if(legacyRaw){const arr=JSON.parse(legacyRaw);if(Array.isArray(arr)){const next=removeKeys(arr);if(next.length!==arr.length)localStorage.setItem('dm_favorites',JSON.stringify(next))}}
+    try{
+      if(typeof state!=='undefined'&&state){
+        if(state.favoriteLists&&typeof state.favoriteLists==='object')Object.keys(state.favoriteLists).forEach(id=>{state.favoriteLists[id]=removeKeys(state.favoriteLists[id])});
+        if(state.favorites&&typeof state.favorites.delete==='function')keys.forEach(k=>state.favorites.delete(k));
+        if(state.eventCartSelection&&typeof state.eventCartSelection.delete==='function')keys.forEach(k=>state.eventCartSelection.delete(k));
+        if(typeof saveFavorites==='function')saveFavorites();
+        if(typeof refreshFavoriteListUI==='function')refreshFavoriteListUI();
+        if(typeof updateBottomTabs==='function')updateBottomTabs();
+        if(typeof render==='function'&&state.showFavorites)render(false);
+      }
+    }catch(e){}
     window.dispatchEvent(new CustomEvent('dm-purchase-saved',{detail:{workId:String(item?.workId??item?.id??''),link:String(item?.link||''),title:String(item?.title||''),author:String(item?.author||'')}}));
   }catch(e){}
 }
@@ -310,4 +333,25 @@ function bind(){
 }
 function init(){ensureStyle();makeModals();setupControls();bind();scheduleBadges();const list=document.getElementById('list');if(list)new MutationObserver(scheduleBadges).observe(list,{childList:true,subtree:true});window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY)scheduleBadges()});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+
+/* DM_SEARCH_TAB_TYPE_SCALE_MATCH */
+(function(){
+  const style=document.createElement('style');
+  style.id='dmSearchTabTypeScaleMatch';
+  style.textContent=`
+@media(max-width:980px){
+  body:not(.favorite-mode):not(.date-list-mode):not(.dm-purchase-tab-mode) .card .book-title{
+    font-size:15px!important;
+    line-height:1.35!important;
+    font-weight:800!important;
+  }
+  body:not(.favorite-mode):not(.date-list-mode):not(.dm-purchase-tab-mode) .card .book-meta{
+    font-size:12px!important;
+    line-height:1.5!important;
+    font-weight:600!important;
+  }
+}
+`;
+  document.head.appendChild(style);
 })();
