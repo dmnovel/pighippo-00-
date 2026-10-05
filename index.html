@@ -2298,4 +2298,28 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 body.date-list-mode .summary .count,
 body.favorite-mode .summary .count{display:none!important}
 body.favorite-mode .summary-filter-line{display:none!important}html[data-theme="dark"] .fav-list-menu-btn,html[data-theme="dark"] .fav-list-select{background:#2A2A2F!important;border-color:#4A4A52!important;color:#F4F4F5!important}html[data-theme="dark"] .fav-list-select option{background:#2A2A2F!important;color:#F4F4F5!important}html[data-theme="dark"] .fav-list-menu{background:#2A2A2F!important;border-color:#4A4A52!important;box-shadow:0 8px 18px rgba(0,0,0,.32)!important}html[data-theme="dark"] .fav-list-menu input{background:#1F1F22!important;border-color:#4A4A52!important;color:#F4F4F5!important}html[data-theme="dark"] .fav-list-menu input::placeholder{color:#A1A1AA!important}
+
+/* mobile: ensure active pointback button is visible in the top action row */
+@media(max-width:980px){
+  #pointbackTopBtn:not([hidden]){
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    order:-25!important;
+    width:auto!important;
+    min-width:74px!important;
+    height:34px!important;
+    min-height:34px!important;
+    padding:0 9px!important;
+    border:1px solid #D9DCE1!important;
+    border-radius:4px!important;
+    background:#fff!important;
+    color:#52525B!important;
+    font-size:12px!important;
+    font-weight:700!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+    box-shadow:none!important;
+  }
+}
 </style>
