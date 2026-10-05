@@ -255,7 +255,7 @@ function isPurchasedForFilter(item){try{const raw=JSON.parse(localStorage.getIte
 function hasSearchCriteria(){return Boolean(els.q.value.trim()||els.titleOnly.value.trim()||els.authorOnly.value.trim()||els.exclude.value.trim()||els.discountRate.value||state.selectedHistoryDates.size||state.keywordInclude.size||state.keywordExclude.size)}
 function getRateKey(value){const m=String(value||'').match(/(\d+)\s*%/);return m?m[1]:''}
 function historyMatchesSelected(item){const selectedDates=state.selectedHistoryDates,selectedRate=els.discountRate.value;if(!selectedDates.size&&!selectedRate)return true;return item._historyItems.some(entry=>{if(selectedDates.size&&!selectedDates.has(entry.date))return false;if(selectedRate&&getRateKey(entry.rate)!==selectedRate)return false;return true})}
-function updatePointbackVisibility(){const btn=document.getElementById('pointbackTopBtn'),backdrop=document.getElementById('pointbackModalBackdrop');const show=state.selectedHistoryDates.size===1&&state.selectedHistoryDates.has('202607백년')&&!state.showFavorites&&!state.showDateList;if(btn)btn.hidden=!show;document.body.classList.toggle('pointback-active',show);if(!show&&backdrop&&backdrop.classList.contains('open')){backdrop.classList.remove('open');backdrop.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open')}}
+function updatePointbackVisibility(){const btn=document.getElementById('pointbackTopBtn'),backdrop=document.getElementById('pointbackModalBackdrop');const selected=state.selectedHistoryDates.size===1?[...state.selectedHistoryDates][0]:'';const show=(selected==='202607백년'||selected==='202609추석뿌리')&&!state.showFavorites&&!state.showDateList;if(btn)btn.hidden=!show;document.body.classList.toggle('pointback-active',show);if(!show&&backdrop&&backdrop.classList.contains('open')){backdrop.classList.remove('open');backdrop.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open')}}
 function applyFilters(){updatePointbackVisibility();const hasCriteria=hasSearchCriteria();if(!hasCriteria){state.filtered=[];state.visibleCount=PAGE_SIZE;updateSummary();render(true);return}const q=normalizeText(els.q.value),titleOnly=normalizeText(els.titleOnly.value),authorOnly=normalizeText(els.authorOnly.value),exclude=normalizeText(els.exclude.value),customMax=els.customMaxPrice?toNumber(els.customMaxPrice.value):0;let result=state.items.filter(item=>{const title=item._titleNorm,author=item._authorNorm,joined=item._joinedNorm;if(!state.includeDiscontinued&&item.isDiscontinued)return false;if(state.excludePurchased&&isPurchasedForFilter(item))return false;if(!historyMatchesSelected(item))return false;if(q&&!(title.includes(q)||author.includes(q)))return false;if(titleOnly&&!title.includes(titleOnly))return false;if(authorOnly&&!author.includes(authorOnly))return false;if(exclude&&joined.includes(exclude))return false;if(customMax>0&&item.price>customMax)return false;const itemKeywords=getItemKeywordNorms(item);for(const keyword of state.keywordInclude){if(!itemKeywords.includes(normalizeText(keyword)))return false}for(const keyword of state.keywordExclude){if(itemKeywords.includes(normalizeText(keyword)))return false}return true});state.filtered=applySort(result);state.visibleCount=PAGE_SIZE;updateSummary();render(false)}
 function applySort(list){const sort=els.sortBy.value,arr=[...list];const byText=f=>(a,b)=>String(a[f]||'').localeCompare(String(b[f]||''),'ko-KR',{numeric:true});if(sort==='titleAsc')arr.sort(byText('title'));if(sort==='authorAsc')arr.sort(byText('author'));if(sort==='titleDesc')arr.sort((a,b)=>byText('title')(b,a));if(sort==='authorDesc')arr.sort((a,b)=>byText('author')(b,a));if(sort==='default')arr.sort((a,b)=>a.originalIndex-b.originalIndex);return arr}
 function updateSummary(){const p=[];if(state.selectedHistoryDates.size){const dates=[...state.selectedHistoryDates];p.push(dates.length<=3?`출현연월: ${dates.join(', ')}`:`출현연월: ${dates.length}개 선택`)};if(els.q.value.trim())p.push(`통합: ${els.q.value.trim()}`);if(els.sortBy.value!=='default')p.push(`정렬: ${els.sortBy.options[els.sortBy.selectedIndex].textContent}`);if(els.discountRate.value)p.push(`할인율: ${els.discountRate.value}%`);if(els.titleOnly.value.trim())p.push(`제목: ${els.titleOnly.value.trim()}`);if(els.authorOnly.value.trim())p.push(`작가: ${els.authorOnly.value.trim()}`);if(els.exclude.value.trim())p.push(`제외: ${els.exclude.value.trim()}`);if(state.keywordInclude.size)p.push(`키워드 포함: ${[...state.keywordInclude].join(', ')}`);if(state.keywordExclude.size)p.push(`키워드 제외: ${[...state.keywordExclude].join(', ')}`);if(state.excludePurchased)p.push('구매작품 제외');els.activeSummary.textContent=p.length?p.join(' · '):'필터 없음'}
@@ -593,14 +593,33 @@ document.addEventListener('click',function(e){
   const closeBtn=document.getElementById('pointbackModalClose');
   if(!backdrop||!openBtn||!closeBtn)return;
   let lastFocus=null;
-  function highlightToday(){
-    const now=new Date();
-    const isEventMonth=now.getFullYear()===2026&&now.getMonth()===6;
-    backdrop.querySelectorAll('[data-pointback-day]').forEach(row=>row.classList.toggle('is-today',isEventMonth&&Number(row.dataset.pointbackDay)===now.getDate()));
+  const pointbackConfigs={
+    '202607백년':[
+      ['2026-07-14','2026-07-14','14일','카테고리 상관없이 10만원 이상 결제','5,000P'],
+      ['2026-07-15','2026-07-15','15일','BL 3만원 이상 결제','1,000P'],
+      ['2026-07-16','2026-07-16','16일','판타지 3만원 이상 결제','1,000P'],
+      ['2026-07-17','2026-07-17','17일','로판 3만원 이상 결제','1,000P'],
+      ['2026-07-18','2026-07-18','18일','로맨스 3만원 이상 결제','1,000P'],
+      ['2026-07-19','2026-07-19','19일','BL 또는 판타지 5만원 이상 결제','1,500P'],
+      ['2026-07-20','2026-07-20','20일','로맨스 또는 로판 5만원 이상 결제','1,500P'],
+      ['2026-07-21','2026-07-21','21일','7/14~7/21 누적 30만원 이상 결제','10,000P']
+    ],
+    '202609추석뿌리':[
+      ['2026-09-23','2026-09-30','9/23~9/30','3만원 이상 구매','3,000P'],
+      ['2026-10-01','2026-10-05','10/1~10/5','1만원 이상 구매','500P']
+    ]
+  };
+  function renderPointback(){
+    const list=document.getElementById('pointbackList');if(!list)return;
+    const selected=state.selectedHistoryDates.size===1?[...state.selectedHistoryDates][0]:'';
+    const rows=pointbackConfigs[selected]||[];
+    const now=new Date(),today=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    list.innerHTML='';
+    rows.forEach(([start,end,label,condition,reward])=>{const row=document.createElement('div');row.className='pointback-row'+(today>=start&&today<=end?' is-today':'');row.innerHTML=`<div class="pointback-date">${label}</div><div class="pointback-condition">${condition}</div><div class="pointback-reward">${reward}</div>`;list.appendChild(row)});
+    const title=document.getElementById('pointbackModalTitle');if(title)title.textContent=selected==='202609추석뿌리'?'202609추석 포인트백':'날짜별 포인트백';
   }
   function openModal(){
-    
-    lastFocus=document.activeElement;highlightToday();backdrop.classList.add('open');backdrop.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');closeBtn.focus();
+    lastFocus=document.activeElement;renderPointback();backdrop.classList.add('open');backdrop.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');closeBtn.focus();
   }
   function closeModal(){backdrop.classList.remove('open');backdrop.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');if(lastFocus&&lastFocus.focus)lastFocus.focus();}
   openBtn.addEventListener('click',openModal);closeBtn.addEventListener('click',closeModal);backdrop.addEventListener('click',e=>{if(e.target===backdrop)closeModal();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.contains('open'))closeModal();});
