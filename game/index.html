@@ -1049,6 +1049,20 @@ input[type=text]::placeholder{color:#bdddf0 !important}
 .game-profile-backdrop{box-sizing:border-box;width:100%;height:100vh;height:100dvh;padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));overflow:hidden;}
 .game-profile-modal{box-sizing:border-box;width:min(520px,100%);min-width:0;min-height:0;max-height:calc(100vh - 24px);max-height:calc(100dvh - max(12px,env(safe-area-inset-top)) - max(12px,env(safe-area-inset-bottom)));overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
 @media(max-width:520px){.game-profile-modal{padding:clamp(12px,3.5vw,20px);}}
+
+/* Long initial-consonant hints: wrap within the quiz panel on any viewport. */
+.initials, .initials.hinted {max-width:100%;min-width:0;overflow-wrap:anywhere;}
+.initials.hinted .initial-word {
+  display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;
+  max-width:100%;min-width:0;white-space:normal;row-gap:4px;column-gap:4px;
+}
+.initials.hinted .initial {min-width:0;max-width:100%;width:auto;flex:0 1 auto;}
+/* Random-game answer selected: distinct from standard blue button. */
+.cards [data-opt].mix-selected {
+  border:3px solid #4caa78 !important;
+  box-shadow:0 0 0 3px rgba(115,215,155,.22),0 5px 12px rgba(49,153,104,.24),inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
 </style>
 </head>
 <body><main class="shell" id="app"><header class="top"><div class="top-side"></div><h1>🎮 미니게임</h1><div class="top-side right"><a class="small-btn exit-btn" href="../index.html">나가기</a></div></header><p class="intro">원하는 게임을 선택해 주세요.</p><button class="feature" data-game="mix"><strong>🎲 랜덤게임</strong><span>등록된 문제 중 10문제 랜덤 출제</span></button><section class="cards"><button class="game-card" data-game="cover"><span class="emoji">🧩</span><strong>표지 조각</strong></button><button class="game-card" data-game="initials"><span class="emoji">🔤</span><strong>초성 퀴즈</strong></button><button class="game-card" data-game="couples"><span class="emoji">💘</span><strong>주인공 짝 잇기</strong></button><button class="game-card" data-game="excerpt"><span class="emoji">📖</span><strong>발췌 퀴즈</strong></button><button class="game-card" data-game="dialogue"><span class="emoji">💬</span><strong>대사 주인 찾기</strong></button><button class="game-card" data-game="puzzle"><span class="emoji">🧠</span><strong>슬라이딩 퍼즐</strong></button></section><p class="settings-note">미리보기에서 버튼이 작동하지 않으면 브라우저에서 열어 주세요.</p></main>
@@ -1199,7 +1213,27 @@ let mixState=null;
 function mixPool(){const pool=[];for(const key of ['initials','cover','excerpt','dialogue'])GAME_DATA[key].forEach((item,index)=>pool.push({type:key,index}));GAME_DATA.couples.forEach((item,index)=>pool.push({type:'pair-single',index}));GAME_DATA.puzzle.forEach((item,index)=>pool.push({type:'puzzle-single',index}));return pool}
 function newMix(){clearQuizAdvance();current='mix';mixState={questions:unseenFirst(mixPool(),q=>q.type==='pair-single'?questionId('couples',q.index):q.type==='puzzle-single'?questionId('puzzle',GAME_DATA.puzzle[q.index].answer):questionId(q.type,q.index)).slice(0,10),index:0};renderMix()}
 function renderMix(){clearQuizAdvance();const s=mixState;if(s.index>=s.questions.length){base('랜덤게임',`<section class="panel done"><div class="emoji">🎉</div><h2>10문제 완료!</h2><button class="primary" id="again">다시 풀기</button></section>${footer('mix')}`);document.getElementById('again').onclick=newMix;bindRestart('mix',newMix);return}const q=s.questions[s.index];const item=q.type==='pair-single'?GAME_DATA.couples[q.index]:q.type==='puzzle-single'?GAME_DATA.puzzle[q.index]:GAME_DATA[q.type][q.index];const label=q.type==='pair-single'?'주인공 짝 잇기':q.type==='puzzle-single'?'슬라이딩 퍼즐':GAME_INFO[q.type].label;
-if(q.type==='pair-single'){const options=shuffled([item.b,...shuffled(GAME_DATA.couples.filter(x=>x.b!==item.b)).slice(0,3).map(x=>x.b)]);base('🎲 랜덤게임',`<section class="panel"><div class="question-head"><strong>${label}</strong><span class="counter">${s.index+1} / ${s.questions.length}</span></div><p class="question">${esc(item.a)}의 짝은 누구일까요?</p><div class="cards">${options.map((name,i)=>`<button class="outline" data-opt="${i}">${esc(name)}</button>`).join('')}</div><p id="feedback" class="feedback" role="status" aria-live="polite"></p></section>${footer('mix')}`);document.querySelectorAll('[data-opt]').forEach(b=>b.onclick=()=>{const correct=options[+b.dataset.opt]===item.b;const f=document.getElementById('feedback');f.className='feedback '+(correct?'good':'bad');f.textContent=correct?'정답입니다!':'틀렸습니다.';if(correct){recordCorrect('mix',1,1,questionId('couples',q.index));document.querySelectorAll('[data-opt]').forEach(x=>x.disabled=true);const oldIndex=s.index;advanceAfterThreeSeconds(()=>{if(current==='mix'&&mixState===s&&s.index===oldIndex){s.index++;renderMix()}})}});bindRestart('mix',newMix);return}
+if(q.type==='pair-single'){
+  const partners=[...new Set(GAME_DATA.couples.filter(x=>x.a===item.a).map(x=>x.b))];
+  const multiPartner=partners.length>1;
+  const wrong=[...new Set(GAME_DATA.couples.map(x=>x.b).filter(name=>!partners.includes(name)))];
+  // One-to-many questions can contain several valid partners; all visible partners must be checked.
+  const additional=shuffled(partners.filter(name=>name!==item.b)).slice(0,multiPartner?Math.floor(Math.random()*Math.min(3,partners.length)):0);
+  const validChoices=[item.b,...additional];
+  const options=shuffled([...validChoices,...shuffled(wrong).slice(0,4-validChoices.length)]);
+  const accepted=new Set(options.filter(name=>partners.includes(name)));
+  const selected=new Set();
+  base('🎲 랜덤게임',`<section class="panel"><div class="question-head"><strong>${label}</strong><span class="counter">${s.index+1} / ${s.questions.length}</span></div><p class="question">${esc(item.a)}의 짝은 누구일까요?</p>${multiPartner?'<p class="pair-note">정답이 여러 명일 수 있습니다. 해당하는 이름을 모두 선택하세요.</p>':''}<div class="cards">${options.map((name,i)=>`<button class="outline" type="button" data-opt="${i}" aria-pressed="false">${esc(name)}</button>`).join('')}</div>${multiPartner?'<div class="actions" style="margin-top:14px"><button class="primary" id="pair-check" type="button">선택 완료</button></div>':''}<p id="feedback" class="feedback" role="status" aria-live="polite"></p></section>${footer('mix')}`);
+  const buttons=[...document.querySelectorAll('[data-opt]')];
+  const finish=()=>{recordCorrect('mix',1,1,questionId('couples',q.index));buttons.forEach(x=>x.disabled=true);const submit=document.getElementById('pair-check');if(submit)submit.disabled=true;const oldIndex=s.index;advanceAfterThreeSeconds(()=>{if(current==='mix'&&mixState===s&&s.index===oldIndex){s.index++;renderMix()}})};
+  const feedbackChoice=ok=>{const f=document.getElementById('feedback');f.className='feedback '+(ok?'good':'bad');f.textContent=ok?'정답입니다!':'틀렸습니다.';if(ok)finish()};
+  buttons.forEach(b=>b.onclick=()=>{
+    if(multiPartner){const name=options[+b.dataset.opt];if(selected.has(name))selected.delete(name);else selected.add(name);buttons.forEach(x=>{const checked=selected.has(options[+x.dataset.opt]);x.classList.toggle('mix-selected',checked);x.setAttribute('aria-pressed',String(checked))});const f=document.getElementById('feedback');f.textContent='';f.className='feedback';}
+    else{buttons.forEach(x=>x.classList.toggle('mix-selected',x===b));feedbackChoice(options[+b.dataset.opt]===item.b)}
+  });
+  if(multiPartner)document.getElementById('pair-check').onclick=()=>feedbackChoice(selected.size===accepted.size&&[...accepted].every(name=>selected.has(name)));
+  bindRestart('mix',newMix);return}
+
 if(q.type==='puzzle-single'){startMixPuzzle(item.answer);return}
 const questionIndex=s.index;base('🎲 랜덤게임',`<section class="panel"><div class="question-head"><strong>${GAME_INFO[q.type].emoji} ${label}</strong><span class="counter">${s.index+1} / ${s.questions.length}</span></div>${item.demo?'<p class="sample">※ 예시 문제입니다.</p>':''}${quizText(q.type,item)}<form id="answer-form"><input type="text" id="answer" placeholder="정답 입력" required autocomplete="off" aria-label="정답 입력"><div class="actions"><button class="primary" id="submit">제출</button></div></form><p id="feedback" class="feedback" role="status" aria-live="polite"></p></section>${footer('mix')}`);document.getElementById('answer-form').onsubmit=e=>{e.preventDefault();const ok=(item.answers||[item.answer]).some(x=>normal(x)===normal(document.getElementById('answer').value));const f=document.getElementById('feedback');f.className='feedback '+(ok?'good':'bad');f.textContent=ok?'정답입니다!':'틀렸습니다.';if(ok){if(!item.demo)recordCorrect('mix',1,1,questionId(q.type,q.index));document.getElementById('submit').disabled=true;document.getElementById('answer').disabled=true;document.querySelectorAll('.initial').forEach(x=>x.classList.add('good'));advanceAfterThreeSeconds(()=>{if(current!=='mix'||mixState!==s||s.index!==questionIndex)return;s.index++;renderMix()})}else{document.querySelectorAll('.initial').forEach(x=>{x.classList.remove('bad');void x.offsetWidth;x.classList.add('bad')})}};if(q.type==='initials')bindInitialHint(item);bindRestart('mix',newMix)}
 // 제목은 실제 마스터의 출현연월 데이터가 있을 때만 출제합니다.
