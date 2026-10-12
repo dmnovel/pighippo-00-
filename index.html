@@ -2389,9 +2389,19 @@ html[data-theme="dark"] .game-opening-link{background:#312e3d;color:#d8ccff;bord
   const backdrop=document.getElementById('gameOpeningNotice');
   const close=document.getElementById('gameOpeningClose');
   if(!backdrop||!close)return;
-  function hide(){backdrop.classList.remove('open');backdrop.setAttribute('aria-hidden','true');}
-  function show(){backdrop.classList.add('open');backdrop.setAttribute('aria-hidden','false');}
+  const noticeKey='gameOpeningNoticeDismissed_v1';
+  function dismissed(){try{return localStorage.getItem(noticeKey)==='1';}catch(e){return false;}}
+  function hide(){
+    backdrop.classList.remove('open');backdrop.setAttribute('aria-hidden','true');
+    try{localStorage.setItem(noticeKey,'1');}catch(e){}
+  }
+  function show(){
+    if(dismissed())return;
+    backdrop.classList.add('open');backdrop.setAttribute('aria-hidden','false');
+  }
   close.addEventListener('click',hide);
+  const link=backdrop.querySelector('.game-opening-link');
+  if(link)link.addEventListener('click',hide);
   backdrop.addEventListener('click',e=>{if(e.target===backdrop)hide()});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.contains('open'))hide()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show,{once:true});else show();
