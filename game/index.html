@@ -1063,6 +1063,17 @@ input[type=text]::placeholder{color:#bdddf0 !important}
   box-shadow:0 0 0 3px rgba(115,215,155,.22),0 5px 12px rgba(49,153,104,.24),inset 0 1px 0 rgba(255,255,255,.9) !important;
 }
 
+
+/* Random-game pair choices: visible selected state for single and multiple answers. */
+.panel .cards button.outline[data-opt].mix-selected,
+.panel .cards button.outline[data-opt][aria-pressed="true"] {
+  background:linear-gradient(180deg,#edfff1 0%,#c3edcf 100%) !important;
+  border:3px solid #34a86c !important;
+  border-bottom:7px solid #208653 !important;
+  color:#165b3e !important;
+  box-shadow:0 0 0 3px rgba(64,192,115,.32),0 5px 13px rgba(37,145,86,.28),inset 0 1px 0 #fff !important;
+  text-shadow:none !important;
+}
 </style>
 </head>
 <body><main class="shell" id="app"><header class="top"><div class="top-side"></div><h1>🎮 미니게임</h1><div class="top-side right"><a class="small-btn exit-btn" href="../index.html">나가기</a></div></header><p class="intro">원하는 게임을 선택해 주세요.</p><button class="feature" data-game="mix"><strong>🎲 랜덤게임</strong><span>등록된 문제 중 10문제 랜덤 출제</span></button><section class="cards"><button class="game-card" data-game="cover"><span class="emoji">🧩</span><strong>표지 조각</strong></button><button class="game-card" data-game="initials"><span class="emoji">🔤</span><strong>초성 퀴즈</strong></button><button class="game-card" data-game="couples"><span class="emoji">💘</span><strong>주인공 짝 잇기</strong></button><button class="game-card" data-game="excerpt"><span class="emoji">📖</span><strong>발췌 퀴즈</strong></button><button class="game-card" data-game="dialogue"><span class="emoji">💬</span><strong>대사 주인 찾기</strong></button><button class="game-card" data-game="puzzle"><span class="emoji">🧠</span><strong>슬라이딩 퍼즐</strong></button></section><p class="settings-note">미리보기에서 버튼이 작동하지 않으면 브라우저에서 열어 주세요.</p></main>
@@ -1229,7 +1240,7 @@ if(q.type==='pair-single'){
   const feedbackChoice=ok=>{const f=document.getElementById('feedback');f.className='feedback '+(ok?'good':'bad');f.textContent=ok?'정답입니다!':'틀렸습니다.';if(ok)finish()};
   buttons.forEach(b=>b.onclick=()=>{
     if(multiPartner){const name=options[+b.dataset.opt];if(selected.has(name))selected.delete(name);else selected.add(name);buttons.forEach(x=>{const checked=selected.has(options[+x.dataset.opt]);x.classList.toggle('mix-selected',checked);x.setAttribute('aria-pressed',String(checked))});const f=document.getElementById('feedback');f.textContent='';f.className='feedback';}
-    else{buttons.forEach(x=>x.classList.toggle('mix-selected',x===b));feedbackChoice(options[+b.dataset.opt]===item.b)}
+    else{buttons.forEach(x=>{const checked=x===b;x.classList.toggle('mix-selected',checked);x.setAttribute('aria-pressed',String(checked))});feedbackChoice(options[+b.dataset.opt]===item.b)}
   });
   if(multiPartner)document.getElementById('pair-check').onclick=()=>feedbackChoice(selected.size===accepted.size&&[...accepted].every(name=>selected.has(name)));
   bindRestart('mix',newMix);return}
