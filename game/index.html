@@ -1002,20 +1002,20 @@ input[type=text]::placeholder{color:#bdddf0 !important}
 .puzzle-toolbar select option{color:#244765;background:#f7fbff}
 .puzzle-title:empty{display:none !important}
 
-/* Game intro navigation: centered on mobile */
-.intro-master-nav{display:flex;justify-content:flex-start;align-items:center;margin:0 0 14px;}
-.intro-master-nav .exit-btn{white-space:nowrap;}
-@media(max-width:520px){.intro-master-nav{justify-content:center;}.intro-master-nav .exit-btn{margin-inline:auto;}}
-
-/* Navigation: fixed inside arcade home, compact on desktop, centered on phones */
-.arcade-intro .intro-master-nav{display:flex !important;align-items:center !important;justify-content:flex-start !important;width:100%;max-width:100%;margin:0 0 12px !important;padding:0 !important;position:relative !important;visibility:visible !important;opacity:1 !important}
-.arcade-intro .intro-master-link{display:inline-flex !important;align-items:center;justify-content:center;width:auto !important;min-width:0 !important;min-height:32px !important;padding:6px 11px !important;border:2px solid #a6d2eb;border-bottom:4px solid #75aed1;border-radius:10px;background:linear-gradient(180deg,#f4fbff,#deeff9);color:#38566c !important;font-size:12px !important;font-weight:800;line-height:1.25;white-space:nowrap;text-decoration:none;box-shadow:0 4px 0 rgba(45,99,139,.15)}
-@media(max-width:520px){.arcade-intro .intro-master-nav{justify-content:center !important}.arcade-intro .intro-master-link{margin-inline:auto !important;font-size:13px !important;padding:8px 13px !important;min-height:38px !important}}
-
-/* Compact right-aligned exit above cabinet: mobile and desktop */
-.arcade-intro .intro-master-nav{justify-content:flex-end !important;margin:0 0 8px !important;padding:0 5px !important;}
-.arcade-intro .intro-master-link{margin:0 !important;padding:6px 10px !important;min-height:32px !important;font-size:12px !important;}
-@media (max-width:520px){.arcade-intro .intro-master-nav{justify-content:flex-end !important;margin:0 0 8px !important;padding:0 6px !important;}.arcade-intro .intro-master-link{margin:0 !important;padding:6px 10px !important;min-height:32px !important;font-size:12px !important;}}
+/* Single source of truth for the game-home navigation (desktop and mobile). */
+.arcade-intro .intro-master-nav{
+  display:flex;align-items:center;justify-content:flex-start;
+  width:100%;margin:0 0 8px;padding:0 5px;
+}
+.arcade-intro .intro-master-link{
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:0 0 auto;width:auto;min-width:0;min-height:32px;
+  margin:0;padding:6px 10px;
+  border:2px solid #a6d2eb;border-bottom:4px solid #75aed1;
+  border-radius:10px;background:linear-gradient(180deg,#f4fbff,#deeff9);
+  color:#38566c;font-size:12px;font-weight:800;line-height:1.25;
+  white-space:nowrap;text-decoration:none;box-shadow:0 4px 0 rgba(45,99,139,.15);
+}
 </style>
 </head>
 <body><main class="shell" id="app"><header class="top"><div class="top-side"></div><h1>🎮 미니게임</h1><div class="top-side right"><a class="small-btn exit-btn" href="../index.html">나가기</a></div></header><p class="intro">원하는 게임을 선택해 주세요.</p><button class="feature" data-game="mix"><strong>🎲 랜덤게임</strong><span>등록된 문제 중 10문제 랜덤 출제</span></button><section class="cards"><button class="game-card" data-game="cover"><span class="emoji">🧩</span><strong>표지 조각</strong></button><button class="game-card" data-game="initials"><span class="emoji">🔤</span><strong>초성 퀴즈</strong></button><button class="game-card" data-game="couples"><span class="emoji">💘</span><strong>주인공 짝 잇기</strong></button><button class="game-card" data-game="excerpt"><span class="emoji">📖</span><strong>발췌 퀴즈</strong></button><button class="game-card" data-game="dialogue"><span class="emoji">💬</span><strong>대사 주인 찾기</strong></button><button class="game-card" data-game="puzzle"><span class="emoji">🧠</span><strong>슬라이딩 퍼즐</strong></button></section><p class="settings-note">미리보기에서 버튼이 작동하지 않으면 브라우저에서 열어 주세요.</p></main>
