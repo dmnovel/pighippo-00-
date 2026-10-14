@@ -1107,10 +1107,13 @@ button, a, .game-card, .intro-option, .initial, .initial-word, .tile,
 .image-zoom-note{margin:-8px 0 14px;text-align:center;font-size:12px;line-height:1.5;color:#8a97a3}
 
 .excerpt-zoom-dialog{position:relative;width:min(420px,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:calc(100dvh - 28px);border:2px solid #d7e0ea;border-radius:24px;background:linear-gradient(180deg,#ffffff 0%,#f9fbff 100%);padding:52px 16px 16px;box-shadow:0 16px 55px rgba(0,0,0,.34);overflow:hidden}
+.excerpt-zoom-dialog.cover-zoom-dialog{width:min(500px,calc(100vw - 28px));max-width:calc(100vw - 28px)}
 .excerpt-zoom-dialog::backdrop{background:rgba(12,20,33,.78)}
 .excerpt-zoom-content{min-height:150px;max-height:calc(100dvh - 130px);display:flex;align-items:center;justify-content:center;overflow:auto;padding:2px}
+.excerpt-zoom-dialog.cover-zoom-dialog .excerpt-zoom-content{min-height:180px;max-height:calc(100dvh - 120px)}
 .excerpt-zoom-dialog img{display:block;width:auto;height:auto;max-width:100%;max-height:min(56dvh,420px);margin:auto;object-fit:contain;border-radius:10px}
-.excerpt-zoom-close{position:absolute;top:10px;right:10px;z-index:2;width:42px;height:42px;border:2px solid #b6d4f2;border-bottom:4px solid #7fb1e2;border-radius:50%;padding:0;background:linear-gradient(180deg,#ffe8f2 0%,#f8cddf 100%);color:#513548;font-size:28px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.excerpt-zoom-dialog.cover-zoom-dialog img{max-width:min(250%,520px);max-height:min(68dvh,520px)}
+.excerpt-zoom-close{position:absolute;top:10px;right:10px;z-index:2;width:42px;height:42px;border:0;border-radius:50%;padding:0;background:linear-gradient(180deg,#ffe8f2 0%,#f8cddf 100%);color:#513548;font-size:28px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(44,58,76,.22), inset 0 1px 0 rgba(255,255,255,.7)}
 .excerpt-zoom-close:focus-visible{outline:3px solid #579cd7;outline-offset:2px}
 
 /* Cover fragments: keep intrinsic image pixels rather than enlarging to fill crop. */
@@ -1459,6 +1462,7 @@ document.addEventListener('click', function(event){
   if(!image)return;
   const dialog=document.createElement('dialog');
   dialog.className='excerpt-zoom-dialog';
+  if((image.alt||'').includes('표지 조각')) dialog.classList.add('cover-zoom-dialog');
   const close=document.createElement('button');
   close.type='button';
   close.className='excerpt-zoom-close';
