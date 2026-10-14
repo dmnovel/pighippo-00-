@@ -1104,11 +1104,14 @@ button, a, .game-card, .intro-option, .initial, .initial-word, .tile,
 .excerpt-picture .excerpt-image-open{display:inline-block;max-width:100%;padding:0;border:0;background:transparent;cursor:zoom-in;border-radius:12px}
 .excerpt-picture .excerpt-image-open img{display:block;width:auto!important;height:auto!important;max-width:100%!important;max-height:none!important;margin:auto;object-fit:contain}
 .excerpt-image-open:focus-visible{outline:3px solid #ff9fc4;outline-offset:3px}
-.excerpt-zoom-dialog{max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border:2px solid #d3dce9;border-radius:15px;background:#fff;padding:44px 12px 12px;box-shadow:0 16px 55px #0009;overflow:auto}
-.excerpt-zoom-dialog::backdrop{background:rgba(12,20,33,.83)}
-.excerpt-zoom-dialog img{display:block;width:auto;height:auto;max-width:none;max-height:none;border-radius:8px}
-.excerpt-zoom-close{position:sticky;top:-38px;float:right;margin-top:-38px;z-index:2;border:0;border-radius:20px;padding:6px 12px;background:#f7d5e4;color:#382438;font-size:16px;font-weight:800;cursor:pointer}
+.image-zoom-note{margin:-8px 0 14px;text-align:center;font-size:12px;line-height:1.5;color:#8a97a3}
 
+.excerpt-zoom-dialog{position:relative;width:min(420px,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:calc(100dvh - 28px);border:2px solid #d7e0ea;border-radius:24px;background:linear-gradient(180deg,#ffffff 0%,#f9fbff 100%);padding:52px 16px 16px;box-shadow:0 16px 55px rgba(0,0,0,.34);overflow:hidden}
+.excerpt-zoom-dialog::backdrop{background:rgba(12,20,33,.78)}
+.excerpt-zoom-content{min-height:150px;max-height:calc(100dvh - 130px);display:flex;align-items:center;justify-content:center;overflow:auto;padding:2px}
+.excerpt-zoom-dialog img{display:block;width:auto;height:auto;max-width:100%;max-height:min(56dvh,420px);margin:auto;object-fit:contain;border-radius:10px}
+.excerpt-zoom-close{position:absolute;top:10px;right:10px;z-index:2;width:42px;height:42px;border:2px solid #b6d4f2;border-bottom:4px solid #7fb1e2;border-radius:50%;padding:0;background:linear-gradient(180deg,#ffe8f2 0%,#f8cddf 100%);color:#513548;font-size:28px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.excerpt-zoom-close:focus-visible{outline:3px solid #579cd7;outline-offset:2px}
 
 /* Cover fragments: keep intrinsic image pixels rather than enlarging to fill crop. */
 .panel .cover-natural{height:auto!important;min-height:0!important;display:block!important;text-align:center!important;overflow:hidden!important;padding:12px!important;}
@@ -1249,7 +1252,7 @@ function initialMarkup(item,showHint=false){
 }
 function hintMarkup(item){return `<div class="initial-help"><button type="button" class="outline" id="space-hint">💡 띄어쓰기 힌트</button><small>정답 입력 시 띄어쓰기·기호는 생략해도 됩니다.</small></div>`}
 function bindInitialHint(item){const btn=document.getElementById('space-hint');if(!btn)return;btn.addEventListener('click',()=>{const el=document.getElementById('initials');if(!el||el.classList.contains('hinted'))return;el.classList.add('hinted');el.innerHTML=initialMarkup(item,true);btn.disabled=true;btn.textContent='띄어쓰기·기호 힌트 사용됨';});}
-function quizText(type,item){if(type==='initials')return `<p class="question">아래 초성에 해당하는 작품의 제목은?</p><div class="initials" id="initials">${initialMarkup(item)}</div>${hintMarkup(item)}`;if(type==='cover')return `<p class="question">아래 표지 조각의 작품 제목은?</p><div class="prompt image-crop cover-natural">${item.image?`<button type="button" class="excerpt-image-open" aria-label="표지 조각 확대하기"><img src="${esc(item.image)}" alt="표지 조각"></button>`:`<span class="image-placeholder">${esc(item.text)}</span>`}</div>`;if(type==='dialogue')return `<p class="question">아래 대사의 주인공 이름은?</p><div class="prompt bubble">${esc(item.text)}</div>`;return `<p class="question">아래 발췌가 나오는 작품의 제목은?</p>${item.image?`<div class="prompt excerpt-picture"><button type="button" class="excerpt-image-open" aria-label="발췌 이미지 확대하기"><img src="${esc(item.image)}" alt="발췌 이미지"></button></div>`:`<div class="prompt excerpt">${esc(item.text)}</div>`}`}
+function quizText(type,item){if(type==='initials')return `<p class="question">아래 초성에 해당하는 작품의 제목은?</p><div class="initials" id="initials">${initialMarkup(item)}</div>${hintMarkup(item)}`;if(type==='cover')return `<p class="question">아래 표지 조각의 작품 제목은?</p><p class="image-zoom-note">이미지를 클릭하면 확대됩니다.</p><div class="prompt image-crop cover-natural">${item.image?`<button type="button" class="excerpt-image-open" aria-label="표지 조각 확대하기"><img src="${esc(item.image)}" alt="표지 조각"></button>`:`<span class="image-placeholder">${esc(item.text)}</span>`}</div>`;if(type==='dialogue')return `<p class="question">아래 대사의 주인공 이름은?</p><div class="prompt bubble">${esc(item.text)}</div>`;return `<p class="question">아래 발췌가 나오는 작품의 제목은?</p>${item.image?`<p class="image-zoom-note">이미지를 클릭하면 확대됩니다.</p><div class="prompt excerpt-picture"><button type="button" class="excerpt-image-open" aria-label="발췌 이미지 확대하기"><img src="${esc(item.image)}" alt="발췌 이미지"></button></div>`:`<div class="prompt excerpt">${esc(item.text)}</div>`}`}
 
 function getQuestion(type,index){return GAME_DATA[type]?.[index]}
 function renderQuiz(){const {type,index}=active;const arr=GAME_DATA[type];if(index>=arr.length){complete(type,arr.length);return}const item=arr[active.order[index]];locked=false;feedback='';base(GAME_INFO[type].label,`<section class="panel"><div class="question-head"><strong>${GAME_INFO[type].emoji} ${GAME_INFO[type].label}</strong><span class="counter">${index+1} / ${arr.length}</span></div>${item.demo?'<p class="sample">※ 아직 실제 문제 데이터가 없는 예시 문항입니다.</p>':''}${quizText(type,item).replace('</p>','</p><p id="feedback" class="feedback" role="status" aria-live="polite"></p>')}<form id="answer-form"><input id="answer" type="text" placeholder="${type==='dialogue'?'주인공 이름':'작품 제목'} 입력" autocomplete="off" aria-label="정답 입력" required><div class="actions"><button class="primary" type="submit" id="submit">제출</button></div></form></section>${footer(type)}`);document.getElementById('answer-form').addEventListener('submit',e=>{e.preventDefault();const inp=document.getElementById('answer');const answer=normal(inp.value);const accepted=(item.answers||[item.answer]).some(x=>normal(x)===answer);let stat=document.getElementById('feedback');stat.className='feedback '+(accepted?'good':'bad');stat.textContent=accepted?'정답입니다!':'틀렸습니다.';if(accepted){if(!item.demo)recordCorrect(type,1,1,questionId(type,active.order[index]));locked=true;document.getElementById('answer').disabled=true;document.getElementById('submit').disabled=true;document.querySelectorAll('.initial').forEach(e=>e.classList.add('good'));save(type,{...active,index:index+1});advanceAfterThreeSeconds(()=>{if(current!==type||!active||active.index!==index)return;active.index++;renderQuiz()})}else{const initials=document.querySelectorAll('.initial');initials.forEach(e=>{e.classList.remove('bad');void e.offsetWidth;e.classList.add('bad')});inp.select()}});if(type==='initials')bindInitialHint(item);bindRestart(type)}
@@ -1457,15 +1460,24 @@ document.addEventListener('click', function(event){
   const dialog=document.createElement('dialog');
   dialog.className='excerpt-zoom-dialog';
   const close=document.createElement('button');
-  close.type='button';close.className='excerpt-zoom-close';close.textContent='닫기';close.setAttribute('aria-label','이미지 확대 닫기');
+  close.type='button';
+  close.className='excerpt-zoom-close';
+  close.innerHTML='&times;';
+  close.setAttribute('aria-label','이미지 확대 닫기');
+  const content=document.createElement('div');
+  content.className='excerpt-zoom-content';
   const enlarged=document.createElement('img');
-  enlarged.src=image.currentSrc||image.src;enlarged.alt=image.alt;
-  dialog.append(close,enlarged);document.body.append(dialog);
+  enlarged.src=image.currentSrc||image.src;
+  enlarged.alt=image.alt;
+  content.append(enlarged);
+  dialog.append(close,content);
+  document.body.append(dialog);
   const dismiss=()=>dialog.close();
   close.addEventListener('click',dismiss);
   dialog.addEventListener('click',e=>{if(e.target===dialog)dismiss()});
   dialog.addEventListener('close',()=>dialog.remove(),{once:true});
-  dialog.showModal();close.focus();
+  dialog.showModal();
+  close.focus();
 });
 </script>
 </body></html>
