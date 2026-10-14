@@ -1098,6 +1098,17 @@ button, a, .game-card, .intro-option, .initial, .initial-word, .tile,
 .mix-mode-modal .mix-mode-btn:active{transform:translateY(4px);border-bottom-width:3px;box-shadow:inset 0 2px 5px rgba(137,54,91,.14)}
 .mix-mode-modal .mix-mode-btn:focus-visible{outline:3px solid #579cd7;outline-offset:2px}
 .mix-mode-cancel{border:2px solid #b9cbd5;border-bottom:5px solid #9cb4c2;border-radius:13px;background:linear-gradient(#fff,#dce9ef);color:#35546a;font-weight:800;padding:10px 25px;font-size:16px;min-height:45px}
+
+/* Excerpt images: intrinsic size in question, click to enlarge. */
+.excerpt-picture{max-width:100%;text-align:center}
+.excerpt-picture .excerpt-image-open{display:inline-block;max-width:100%;padding:0;border:0;background:transparent;cursor:zoom-in;border-radius:12px}
+.excerpt-picture .excerpt-image-open img{display:block;width:auto!important;height:auto!important;max-width:100%!important;max-height:none!important;margin:auto;object-fit:contain}
+.excerpt-image-open:focus-visible{outline:3px solid #ff9fc4;outline-offset:3px}
+.excerpt-zoom-dialog{max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border:2px solid #d3dce9;border-radius:15px;background:#fff;padding:44px 12px 12px;box-shadow:0 16px 55px #0009;overflow:auto}
+.excerpt-zoom-dialog::backdrop{background:rgba(12,20,33,.83)}
+.excerpt-zoom-dialog img{display:block;width:auto;height:auto;max-width:none;max-height:none;border-radius:8px}
+.excerpt-zoom-close{position:sticky;top:-38px;float:right;margin-top:-38px;z-index:2;border:0;border-radius:20px;padding:6px 12px;background:#f7d5e4;color:#382438;font-size:16px;font-weight:800;cursor:pointer}
+
 </style>
 </head>
 <body><main class="shell" id="app"><header class="top"><div class="top-side"></div><h1>🎮 미니게임</h1><div class="top-side right"><a class="small-btn exit-btn" href="../index.html">나가기</a></div></header><p class="intro">원하는 게임을 선택해 주세요.</p><button class="feature" data-game="mix"><strong>🎲 랜덤게임</strong><span>등록된 문제 중 10문제 랜덤 출제</span></button><section class="cards"><button class="game-card" data-game="cover"><span class="emoji">🧩</span><strong>표지 조각</strong></button><button class="game-card" data-game="initials"><span class="emoji">🔤</span><strong>초성 퀴즈</strong></button><button class="game-card" data-game="couples"><span class="emoji">💘</span><strong>주인공 짝 잇기</strong></button><button class="game-card" data-game="excerpt"><span class="emoji">📖</span><strong>발췌 퀴즈</strong></button><button class="game-card" data-game="dialogue"><span class="emoji">💬</span><strong>대사 주인 찾기</strong></button><button class="game-card" data-game="puzzle"><span class="emoji">🧠</span><strong>슬라이딩 퍼즐</strong></button></section><p class="settings-note">미리보기에서 버튼이 작동하지 않으면 브라우저에서 열어 주세요.</p></main>
@@ -1233,7 +1244,7 @@ function initialMarkup(item,showHint=false){
 }
 function hintMarkup(item){return `<div class="initial-help"><button type="button" class="outline" id="space-hint">💡 띄어쓰기 힌트</button><small>정답 입력 시 띄어쓰기·기호는 생략해도 됩니다.</small></div>`}
 function bindInitialHint(item){const btn=document.getElementById('space-hint');if(!btn)return;btn.addEventListener('click',()=>{const el=document.getElementById('initials');if(!el||el.classList.contains('hinted'))return;el.classList.add('hinted');el.innerHTML=initialMarkup(item,true);btn.disabled=true;btn.textContent='띄어쓰기·기호 힌트 사용됨';});}
-function quizText(type,item){if(type==='initials')return `<p class="question">아래 초성에 해당하는 작품의 제목은?</p><div class="initials" id="initials">${initialMarkup(item)}</div>${hintMarkup(item)}`;if(type==='cover')return `<p class="question">아래 표지 조각의 작품 제목은?</p><div class="prompt image-crop">${item.image?`<img src="${esc(item.image)}" alt="표지 조각">`:`<span class="image-placeholder">${esc(item.text)}</span>`}</div>`;if(type==='dialogue')return `<p class="question">아래 대사의 주인공 이름은?</p><div class="prompt bubble">${esc(item.text)}</div>`;return `<p class="question">아래 발췌가 나오는 작품의 제목은?</p>${item.image?`<div class="prompt excerpt-picture"><img src="${esc(item.image)}" alt="발췌 이미지"></div>`:`<div class="prompt excerpt">${esc(item.text)}</div>`}`}
+function quizText(type,item){if(type==='initials')return `<p class="question">아래 초성에 해당하는 작품의 제목은?</p><div class="initials" id="initials">${initialMarkup(item)}</div>${hintMarkup(item)}`;if(type==='cover')return `<p class="question">아래 표지 조각의 작품 제목은?</p><div class="prompt image-crop">${item.image?`<img src="${esc(item.image)}" alt="표지 조각">`:`<span class="image-placeholder">${esc(item.text)}</span>`}</div>`;if(type==='dialogue')return `<p class="question">아래 대사의 주인공 이름은?</p><div class="prompt bubble">${esc(item.text)}</div>`;return `<p class="question">아래 발췌가 나오는 작품의 제목은?</p>${item.image?`<div class="prompt excerpt-picture"><button type="button" class="excerpt-image-open" aria-label="발췌 이미지 확대하기"><img src="${esc(item.image)}" alt="발췌 이미지"></button></div>`:`<div class="prompt excerpt">${esc(item.text)}</div>`}`}
 
 function getQuestion(type,index){return GAME_DATA[type]?.[index]}
 function renderQuiz(){const {type,index}=active;const arr=GAME_DATA[type];if(index>=arr.length){complete(type,arr.length);return}const item=arr[active.order[index]];locked=false;feedback='';base(GAME_INFO[type].label,`<section class="panel"><div class="question-head"><strong>${GAME_INFO[type].emoji} ${GAME_INFO[type].label}</strong><span class="counter">${index+1} / ${arr.length}</span></div>${item.demo?'<p class="sample">※ 아직 실제 문제 데이터가 없는 예시 문항입니다.</p>':''}${quizText(type,item).replace('</p>','</p><p id="feedback" class="feedback" role="status" aria-live="polite"></p>')}<form id="answer-form"><input id="answer" type="text" placeholder="${type==='dialogue'?'주인공 이름':'작품 제목'} 입력" autocomplete="off" aria-label="정답 입력" required><div class="actions"><button class="primary" type="submit" id="submit">제출</button></div></form></section>${footer(type)}`);document.getElementById('answer-form').addEventListener('submit',e=>{e.preventDefault();const inp=document.getElementById('answer');const answer=normal(inp.value);const accepted=(item.answers||[item.answer]).some(x=>normal(x)===answer);let stat=document.getElementById('feedback');stat.className='feedback '+(accepted?'good':'bad');stat.textContent=accepted?'정답입니다!':'틀렸습니다.';if(accepted){if(!item.demo)recordCorrect(type,1,1,questionId(type,active.order[index]));locked=true;document.getElementById('answer').disabled=true;document.getElementById('submit').disabled=true;document.querySelectorAll('.initial').forEach(e=>e.classList.add('good'));save(type,{...active,index:index+1});advanceAfterThreeSeconds(()=>{if(current!==type||!active||active.index!==index)return;active.index++;renderQuiz()})}else{const initials=document.querySelectorAll('.initial');initials.forEach(e=>{e.classList.remove('bad');void e.offsetWidth;e.classList.add('bad')});inp.select()}});if(type==='initials')bindInitialHint(item);bindRestart(type)}
@@ -1431,4 +1442,25 @@ app.querySelectorAll('[data-tile]').forEach(btn=>btn.onclick=()=>{
 function paintPuzzle(hits,inMix){const s=puzzleState,n=s.n;const moveCounter=document.getElementById('move-counter');if(moveCounter&&inMix)moveCounter.textContent=`${mixState.index+1} / ${mixState.questions.length}`;document.querySelectorAll('[data-tile]').forEach((el,i)=>{const tile=s.board[i];el.textContent=tile?.char||'';el.className='tile'+(tile===null?' empty chosen':tile.kind==='filler'?' filler':'')+(!s.solved&&[2,4].includes(s.level)&&s.targets.includes(i)?' target':'')+(hits?.includes(i)?' solved':'')+(tile!==null&&!s.solved&&puzzleNeighbors(s.empty,n).includes(i)?' movable':'');el.disabled=s.solved;el.setAttribute('aria-label',`${Math.floor(i/n)+1}행 ${i%n+1}열 ${tile===null?'빈칸':tile.char||'글자 없는 블록'}`)});if(hits){document.getElementById('feedback').textContent='정답입니다!';document.getElementById('feedback').className='feedback good';const nextBox=document.getElementById('puzzle-next');if(nextBox&&!inMix)nextBox.hidden=false}}
 // URL 경로에 의존하지 않는 완전한 단일 파일
 intro();
-</script></body></html>
+</script><script>
+// Delegated click for excerpt image full-size view; supports quiz and random modes.
+document.addEventListener('click', function(event){
+  const trigger=event.target.closest?.('.excerpt-image-open');
+  if(!trigger)return;
+  const image=trigger.querySelector('img');
+  if(!image)return;
+  const dialog=document.createElement('dialog');
+  dialog.className='excerpt-zoom-dialog';
+  const close=document.createElement('button');
+  close.type='button';close.className='excerpt-zoom-close';close.textContent='닫기';close.setAttribute('aria-label','이미지 확대 닫기');
+  const enlarged=document.createElement('img');
+  enlarged.src=image.currentSrc||image.src;enlarged.alt=image.alt;
+  dialog.append(close,enlarged);document.body.append(dialog);
+  const dismiss=()=>dialog.close();
+  close.addEventListener('click',dismiss);
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dismiss()});
+  dialog.addEventListener('close',()=>dialog.remove(),{once:true});
+  dialog.showModal();close.focus();
+});
+</script>
+</body></html>
