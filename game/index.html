@@ -1086,9 +1086,9 @@ button, a, .game-card, .intro-option, .initial, .initial-word, .tile,
 
 /* 랜덤 난이도 선택: 군청색 대비가 높은 밝은 코랄/살구 */
 .mix-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0 10px}.mix-mode-btn{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;min-height:94px;padding:12px 6px;border:2px solid #e79a67;border-radius:12px;background:#ffd9b8;color:#26394f;box-shadow:0 3px 0 #b57b59;font-weight:800}.mix-mode-btn strong{font-size:19px}.mix-mode-btn span{font-size:12px}.mix-mode-btn:focus-visible,.mix-mode-btn:active{outline:3px solid #4d8db3;outline-offset:2px;background:#ffe7ce}.mix-mode-help{text-align:center;line-height:1.6}.puzzle-progress{text-align:center;margin:10px 0;font-weight:750;font-size:15px;color:#234965}
-/* 15x15 expanded board and distinct pink difficulty modal */
-@media(max-width:650px){.shell:has(.puzzle-size-15){padding-left:4px!important;padding-right:4px!important}.panel.puzzle-size-15{padding-left:7px!important;padding-right:7px!important}}
-.puzzle-size-15 .puzzle-grid{max-width:100%}
+/* 13x13 expanded board and distinct pink difficulty modal */
+@media(max-width:650px){.shell:has(.puzzle-size-13){padding-left:4px!important;padding-right:4px!important}.panel.puzzle-size-13{padding-left:7px!important;padding-right:7px!important}}
+.puzzle-size-13 .puzzle-grid{max-width:100%}
 .mix-mode-backdrop{position:fixed;inset:0;z-index:10020;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,22,36,.58);touch-action:manipulation}
 .mix-mode-modal{width:min(480px,100%);background:linear-gradient(180deg,#fff8fb,#fff0f6);border:3px solid #ebaac9;border-bottom:8px solid #d57ca8;border-radius:24px;box-shadow:0 18px 40px rgba(24,32,60,.30);padding:20px 16px 24px;color:#334357;text-align:center}
 .mix-mode-modal h2{font-size:23px;margin:4px 0 10px}.mix-mode-modal p{font-size:14px;line-height:1.6;margin:0 0 18px;color:#72506a}
@@ -1131,10 +1131,10 @@ button, a, .game-card, .intro-option, .initial, .initial-word, .tile,
 /* 15x15: apply to both standalone puzzle and mixed-mode puzzle.
    All 225 cells remain on screen; reclaim side gutters and reduce gaps. */
 @media(max-width:650px){
-  .shell:has(.panel.puzzle-size-15){padding-left:2px!important;padding-right:2px!important;max-width:100%!important}
-  .panel.puzzle-size-15{padding-left:3px!important;padding-right:3px!important}
-  .panel.puzzle-size-15 .puzzle-grid{width:100%!important;max-width:100%!important;gap:1px!important}
-  .panel.puzzle-size-15 .tile{font-size:15px!important;letter-spacing:0!important;line-height:1!important}
+  .shell:has(.panel.puzzle-size-13){padding-left:2px!important;padding-right:2px!important;max-width:100%!important}
+  .panel.puzzle-size-13{padding-left:3px!important;padding-right:3px!important}
+  .panel.puzzle-size-13 .puzzle-grid{width:100%!important;max-width:100%!important;gap:1px!important}
+  .panel.puzzle-size-13 .tile{font-size:15px!important;letter-spacing:0!important;line-height:1!important}
 }
 </style>
 </head>
@@ -1156,7 +1156,7 @@ const GAME_INFO={cover:{label:'표지 조각',emoji:'🧩'},initials:{label:'초
 const STORE='dmnovel_minigame_v1_';
 const GAME_PROFILE_KEY='dm_game_profile_v1';
 const GAME_TYPES=['cover','initials','couples','excerpt','dialogue','puzzle','mix'];
-const PUZZLE_SIZES=[5,10,15];
+const PUZZLE_SIZES=[5,10,13];
 let mixDifficulty=5;
 function puzzleSizedId(title,size){return 'puzzle:'+size+':'+normal(title)}
 function puzzleEligible(item){return item&&typeof item.title==='string'&&!puzzleExcluded.has(normal(item.title))&&!item.discontinued&&!item.soldOut&&!item.isDiscontinued&&!['판중','판매중지','판매종료','절판'].includes(String(item.status||'').trim())}
@@ -1165,7 +1165,7 @@ function puzzleStageStats(n){const pool=puzzleForSize(n);const ids=new Set((game
 function defaultGameStats(){return {cover:{correct:0,score:0,clears:0,level:1},initials:{correct:0,score:0,clears:0,level:1},couples:{correct:0,score:0,clears:0,level:1},excerpt:{correct:0,score:0,clears:0,level:1},dialogue:{correct:0,score:0,clears:0,level:1},puzzle:{correct:0,score:0,clears:0,level:1,bestSize:5},mix:{correct:0,score:0,clears:0,level:1}}}
 function defaultGameProfile(){return {name:'',totalCorrect:0,totalScore:0,games:defaultGameStats(),solvedIds:[],scoreVersion:2,savedAt:''}}
 function mergeProfile(src){const base=defaultGameProfile();if(!src||typeof src!=='object')return base;base.name=String(src.name||'').replace(/\s+/g,'').slice(0,6);base.totalCorrect=Number(src.totalCorrect)||0;base.totalScore=Number(src.totalScore)||0;base.savedAt=String(src.savedAt||'');if(src.scoreVersion===2){base.scoreVersion=2;base.solvedIds=Array.isArray(src.solvedIds)?src.solvedIds.filter(x=>typeof x==='string').slice(0,200000):[];if(src.legacyScore)base.legacyScore=src.legacyScore;}else{base.legacyScore={totalCorrect:Number(src.totalCorrect)||0,totalScore:Number(src.totalScore)||0,games:src.games||{}};base.solvedIds=[];}GAME_TYPES.forEach(k=>{const s=src.games&&src.games[k]||{};base.games[k]={...base.games[k],...Object.fromEntries(Object.entries(s).filter(([kk,v])=>['correct','score','clears','level','bestSize'].includes(kk) && Number.isFinite(Number(v))).map(([kk,v])=>[kk,Number(v)]))};});if(src.scoreVersion!==2){base.totalCorrect=0;base.totalScore=0;base.games=defaultGameStats();}return base}
-function loadGameProfile(){try{return mergeProfile(JSON.parse(localStorage.getItem(GAME_PROFILE_KEY)||'null'))}catch(e){return defaultGameProfile()}}
+function loadGameProfile(){try{const raw=JSON.parse(localStorage.getItem(GAME_PROFILE_KEY)||'null');const profile=mergeProfile(raw);if(raw&&raw.puzzle13ResetV1!==true){const prior=profile.solvedIds.length;profile.solvedIds=profile.solvedIds.filter(id=>!id.startsWith('puzzle:15:'));if(profile.solvedIds.length!==prior){profile.totalCorrect=profile.solvedIds.length;profile.totalScore=profile.solvedIds.length;profile.games.puzzle.correct=profile.solvedIds.filter(id=>id.startsWith('puzzle:')).length;profile.games.puzzle.score=profile.games.puzzle.correct;profile.games.puzzle.level=1;profile.games.puzzle.bestSize=Math.min(13,Number(profile.games.puzzle.bestSize)||5);profile.games.mix.correct=profile.solvedIds.length;profile.games.mix.score=profile.solvedIds.length;}profile.puzzle13ResetV1=true;try{localStorage.setItem(GAME_PROFILE_KEY,JSON.stringify(profile))}catch(e){}}return profile}catch(e){return defaultGameProfile()}}
 let gameProfile=loadGameProfile();
 function saveGameProfile(notify=false){gameProfile.savedAt=new Date().toISOString();try{localStorage.setItem(GAME_PROFILE_KEY,JSON.stringify(gameProfile));if(notify)alert('게임 정보가 저장되었습니다. 이 데이터는 마스터페이지 설정백업에 함께 포함됩니다.')}catch(e){if(notify)alert('게임 정보를 저장하지 못했습니다.')}}
 function sanitizeName(v){return String(v||'').replace(/\s+/g,'').slice(0,6)}
@@ -1287,13 +1287,13 @@ function updatePairs(){const s=pairState;document.getElementById('pair-count').t
 
 window.addEventListener('keydown',onIntroKeydown);
 window.addEventListener('resize',()=>{if(current==='couples'&&pairState&&document.getElementById('lines'))updatePairs()});
-// 랜덤 믹스: 등록된 개별 게임 문항에서 한 문제 단위로 추출, 총 10문제, 저장 없음.
+// 랜덤 믹스: 이지 10, 노멀 15, 하드 20문제. 슬라이딩 2문제 포함.
 let mixState=null;
 function closeMixModePicker(){const backdrop=document.getElementById('mixModeBackdrop');if(!backdrop)return;backdrop.remove();if(!document.querySelector('.game-profile-backdrop.open,.intro-options-backdrop.open'))document.body.classList.remove('modal-open')}
 function showMixModePicker(){
   clearQuizAdvance();closeMixModePicker();
   const backdrop=document.createElement('div');backdrop.id='mixModeBackdrop';backdrop.className='mix-mode-backdrop';backdrop.setAttribute('aria-hidden','false');
-  backdrop.innerHTML=`<section class="mix-mode-modal" role="dialog" aria-modal="true" aria-labelledby="mixModeTitle"><h2 id="mixModeTitle">🎲 랜덤게임 난이도</h2><p>슬라이딩 퍼즐 크기를 선택해 주세요.<br>총 10문제가 랜덤으로 출제됩니다.</p><div class="mix-modes">${[[5,'이지'],[10,'노멀'],[15,'하드']].map(([n,label])=>`<button type="button" class="mix-mode-btn" data-mix-size="${n}"><strong>${label}</strong><span>${n}×${n}</span></button>`).join('')}</div><button type="button" class="mix-mode-cancel" id="mixModeCancel">취소</button></section>`;
+  backdrop.innerHTML=`<section class="mix-mode-modal" role="dialog" aria-modal="true" aria-labelledby="mixModeTitle"><h2 id="mixModeTitle">🎲 랜덤게임 난이도</h2><p>난이도별 문제 수와 슬라이딩 퍼즐 크기가 달라집니다.</p><div class="mix-modes">${[[5,'이지'],[10,'노멀'],[13,'하드']].map(([n,label])=>`<button type="button" class="mix-mode-btn" data-mix-size="${n}"><strong>${label}</strong><span>${n}×${n} · ${n===5?10:n===10?15:20}문제</span></button>`).join('')}</div><button type="button" class="mix-mode-cancel" id="mixModeCancel">취소</button></section>`;
   document.body.appendChild(backdrop);document.body.classList.add('modal-open');
   backdrop.addEventListener('click',e=>{if(e.target===backdrop)closeMixModePicker()});
   backdrop.querySelector('#mixModeCancel').addEventListener('click',closeMixModePicker);
@@ -1302,8 +1302,8 @@ function showMixModePicker(){
 }
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('mixModeBackdrop')){e.preventDefault();closeMixModePicker()}});
 function mixPool(){const pool=[];for(const key of ['initials','cover','excerpt','dialogue'])GAME_DATA[key].forEach((item,index)=>pool.push({type:key,index}));GAME_DATA.couples.forEach((item,index)=>pool.push({type:'pair-single',index}));puzzleForSize(mixDifficulty).forEach(item=>pool.push({type:'puzzle-single',title:item.title}));return pool}
-async function newMix(){clearQuizAdvance();current='mix';try{await ensurePuzzleData()}catch(e){console.warn('슬라이딩 제목 데이터 연결 실패:',e)}const pool=mixPool();const qId=q=>q.type==='pair-single'?questionId('couples',q.index):q.type==='puzzle-single'?puzzleSizedId(q.title,mixDifficulty):questionId(q.type,q.index);const sliding=unseenFirst(pool.filter(q=>q.type==='puzzle-single'),qId).slice(0,2);const other=unseenFirst(pool.filter(q=>q.type!=='puzzle-single'),qId).slice(0,10-sliding.length);mixState={questions:shuffled([...sliding,...other]),index:0,difficulty:mixDifficulty};renderMix()}
-function renderMix(){clearQuizAdvance();const s=mixState;if(s.index>=s.questions.length){base('랜덤게임',`<section class="panel done"><div class="emoji">🎉</div><h2>10문제 완료!</h2><button class="primary" id="again">다시 풀기</button></section>${footer('mix')}`);document.getElementById('again').onclick=showMixModePicker;bindRestart('mix',newMix);return}const q=s.questions[s.index];const item=q.type==='pair-single'?GAME_DATA.couples[q.index]:q.type==='puzzle-single'?{answer:q.title}:GAME_DATA[q.type][q.index];const label=q.type==='pair-single'?'주인공 짝 잇기':q.type==='puzzle-single'?'슬라이딩 퍼즐':GAME_INFO[q.type].label;
+async function newMix(){clearQuizAdvance();current='mix';try{await ensurePuzzleData()}catch(e){console.warn('슬라이딩 제목 데이터 연결 실패:',e)}const pool=mixPool();const qId=q=>q.type==='pair-single'?questionId('couples',q.index):q.type==='puzzle-single'?puzzleSizedId(q.title,mixDifficulty):questionId(q.type,q.index);const targetCount=mixDifficulty===5?10:mixDifficulty===10?15:20;const sliding=unseenFirst(pool.filter(q=>q.type==='puzzle-single'),qId).slice(0,2);const other=unseenFirst(pool.filter(q=>q.type!=='puzzle-single'),qId).slice(0,targetCount-sliding.length);mixState={questions:shuffled([...sliding,...other]),index:0,difficulty:mixDifficulty};renderMix()}
+function renderMix(){clearQuizAdvance();const s=mixState;if(s.index>=s.questions.length){base('랜덤게임',`<section class="panel done"><div class="emoji">🎉</div><h2>${s.questions.length}문제 완료!</h2><button class="primary" id="again">다시 풀기</button></section>${footer('mix')}`);document.getElementById('again').onclick=showMixModePicker;bindRestart('mix',newMix);return}const q=s.questions[s.index];const item=q.type==='pair-single'?GAME_DATA.couples[q.index]:q.type==='puzzle-single'?{answer:q.title}:GAME_DATA[q.type][q.index];const label=q.type==='pair-single'?'주인공 짝 잇기':q.type==='puzzle-single'?'슬라이딩 퍼즐':GAME_INFO[q.type].label;
 if(q.type==='pair-single'){
   const partners=[...new Set(GAME_DATA.couples.filter(x=>x.a===item.a).map(x=>x.b))];
   const multiPartner=partners.length>1;
@@ -1373,7 +1373,7 @@ async function ensurePuzzleData(){
 }
 
 let puzzleState=null, puzzleSize=5, puzzleYear='202512', puzzleDemo=false;
-const minTitleLength=n=>({5:2,10:5,15:8,20:11})[n];
+const minTitleLength=n=>({5:2,10:5,13:8,15:8,20:11})[n];
 const puzzleNeighbors=(i,n)=>[i%n>0?i-1:-1,i%n<n-1?i+1:-1,i>=n?i-n:-1,i<n*(n-1)?i+n:-1].filter(x=>x>=0);
 const puzzleSymbols=Array.from('!?.,:;()[]·~「」『』\'"-+&');
 function puzzleTokens(title){return Array.from(title).filter(ch=>ch.trim()&&ch!==' ')}
@@ -1391,7 +1391,7 @@ function makePuzzle(word,level,n){
  const targetSet=new Set(targets);
  const edges=targets.flatMap(i=>puzzleNeighbors(i,n).filter(j=>!targetSet.has(j)).map(j=>({from:i,to:j})));
  const runs=4;
- const steps=n===5?450:n===10?1500:n===15?3400:6800;
+ const steps=n===5?450:n===10?1500:n===13?2800:6800;
  let best=null,bestScore=-Infinity;
  for(let trial=0;trial<runs;trial++){
   const board=Array.from({length:n*n},()=>({kind:'filler',char:''}));
@@ -1430,7 +1430,7 @@ function makePuzzle(word,level,n){
 }
 function showPuzzleUnavailable(){
  const empty=puzzleSource.length===0;
- base('슬라이딩 퍼즐',`<section class="panel ${n===15?'puzzle-size-15':''}"><div class="question-head"><strong>🧠 제목 슬라이딩 퍼즐</strong></div>${puzzleControls()}<p class="empty-state">${empty?'202512 출현 작품 데이터가 아직 연결되지 않았습니다.':'이 크기에 맞는 202512 출현 작품 제목이 없습니다.'}</p><div class="actions"><button class="outline" id="puzzle-demo">예시로 작동 테스트</button></div><div class="actions"><button class="outline" id="puzzle-import">JSON 불러오기</button><input hidden type="file" id="puzzle-file" accept=".json,application/json"></div><p class="help">202512 출현 이력 JSON을 연결하면 해당 작품에서 무작위로 출제됩니다. 예시 테스트는 실제 출현 작품을 뜻하지 않습니다.</p></section>${footer('puzzle')}`);
+ base('슬라이딩 퍼즐',`<section class="panel ${n===13?'puzzle-size-13':''}"><div class="question-head"><strong>🧠 제목 슬라이딩 퍼즐</strong></div>${puzzleControls()}<p class="empty-state">${empty?'202512 출현 작품 데이터가 아직 연결되지 않았습니다.':'이 크기에 맞는 202512 출현 작품 제목이 없습니다.'}</p><div class="actions"><button class="outline" id="puzzle-demo">예시로 작동 테스트</button></div><div class="actions"><button class="outline" id="puzzle-import">JSON 불러오기</button><input hidden type="file" id="puzzle-file" accept=".json,application/json"></div><p class="help">202512 출현 이력 JSON을 연결하면 해당 작품에서 무작위로 출제됩니다. 예시 테스트는 실제 출현 작품을 뜻하지 않습니다.</p></section>${footer('puzzle')}`);
  bindPuzzleControls();document.getElementById('puzzle-demo').onclick=()=>{puzzleDemo=true;newPuzzle()};
  const file=document.getElementById('puzzle-file');document.getElementById('puzzle-import').onclick=()=>file.click();file.onchange=async()=>{try{const data=JSON.parse(await file.files[0].text());if(!Array.isArray(data)||!data.every(x=>typeof x.title==='string'&&Array.isArray(x.appearances)))throw Error('형식 오류');puzzleSource=data;puzzleDemo=false;newPuzzle()}catch(e){alert('제목과 appearances 배열을 가진 JSON 목록을 선택해 주세요.')}};bindRestart('puzzle',()=>{puzzleDemo=false;newPuzzle()});
 }
@@ -1438,7 +1438,7 @@ function puzzleControls(){const v=puzzleDemo?null:puzzleStageStats(puzzleSize);r
 function bindPuzzleControls(){const el=document.getElementById('puzzle-size');if(el)el.onchange=e=>{puzzleSize=+e.target.value;newPuzzle()}}
 async function newPuzzle(){current='puzzle';puzzleYear='202512';if(!puzzleDemo){try{await ensurePuzzleData()}catch(err){console.error('게임 제목 복호화 실패',err);showPuzzleUnavailable();return}}let word=puzzleDemo?(['시맨틱 에러','유언 때문에 죽는 건 잠깐 미뤘습니다','충격! 머리가 모니터인 남자친구 실존'].find(t=>{let z=puzzleTokens(t).length;return z>=minTitleLength(puzzleSize)&&z<=puzzleSize})||'전마'):puzzlePick();if(!word){puzzleState=null;showPuzzleUnavailable();return}puzzleState=makePuzzle(word,2,puzzleSize);renderPuzzle()}
 function startMixPuzzle(word){const size=mixState.difficulty;if(puzzleTokens(word).length>size){mixState.index++;renderMix();return;}puzzleState=makePuzzle(word,2,size);renderPuzzle(true)}
-function renderPuzzle(inMix=false){const s=puzzleState,n=s.n,level=s.level;const count=inMix?`${mixState.index+1} / ${mixState.questions.length}`:'';const header=inMix?'🎲 랜덤게임':'슬라이딩 퍼즐';base(header,`<section class="panel ${n===15?'puzzle-size-15':''}"><div class="question-head"><strong>🧠 제목 슬라이딩 퍼즐</strong>${inMix?`<span class="counter" id="move-counter">${count}</span>`:""}</div>${!inMix?puzzleControls():''}${!inMix&&puzzleDemo?'<p class="sample">※ 예시 제목으로 이동을 테스트하는 중입니다.</p>':''}<p class="puzzle-title" id="puzzle-title" aria-live="polite">${s.titleRevealed?`완성할 제목: <b>${esc(s.title)}</b>`:""}</p><div class="puzzle-grid" id="puzzle-grid" style="--puzzle-n:${n};--puzzle-gap:${n>=20?2:n>=15?1:n>=10?5:8}px;--puzzle-font:${n===5?22:n===10?13:n===15?15:8}px;--puzzle-radius:${n>=15?2:6}px">${s.board.map((tile,i)=>`<button type="button" class="tile ${tile===null?'empty chosen':tile.kind==='filler'?'filler':''} ${tile!==null&&puzzleNeighbors(s.empty,n).includes(i)?'movable':''} ${!s.solved&&[2,4].includes(level)&&s.targets.includes(i)?'target':''}" data-tile="${i}" aria-label="${Math.floor(i/n)+1}행 ${i%n+1}열 ${tile===null?'빈칸':tile.char||'글자 없는 블록'}" ${s.solved?'disabled':''}>${tile?.char?esc(tile.char):''}</button>`).join('')}</div><p class="feedback" id="feedback" role="status" aria-live="polite"></p><div class="actions"><button class="outline" id="puzzle-reveal" type="button" ${s.titleRevealed?"disabled":""}>${s.titleRevealed?"제목 확인 완료":"제목 보기"}</button></div>${!inMix?'<div class="actions" id="puzzle-next" hidden><button class="primary next-btn" id="next-puzzle">새로운 퍼즐 풀기</button></div>':''}</section>${footer(inMix?'mix':'puzzle')}`);puzzleChosen=true;puzzleAnimating=false;
+function renderPuzzle(inMix=false){const s=puzzleState,n=s.n,level=s.level;const count=inMix?`${mixState.index+1} / ${mixState.questions.length}`:'';const header=inMix?'🎲 랜덤게임':'슬라이딩 퍼즐';base(header,`<section class="panel ${n===13?'puzzle-size-13':''}"><div class="question-head"><strong>🧠 제목 슬라이딩 퍼즐</strong>${inMix?`<span class="counter" id="move-counter">${count}</span>`:""}</div>${!inMix?puzzleControls():''}${!inMix&&puzzleDemo?'<p class="sample">※ 예시 제목으로 이동을 테스트하는 중입니다.</p>':''}<p class="puzzle-title" id="puzzle-title" aria-live="polite">${s.titleRevealed?`완성할 제목: <b>${esc(s.title)}</b>`:""}</p><div class="puzzle-grid" id="puzzle-grid" style="--puzzle-n:${n};--puzzle-gap:${n>=20?2:n>=13?1:n>=10?5:8}px;--puzzle-font:${n===5?22:n===10?13:n===13?15:8}px;--puzzle-radius:${n>=13?2:6}px">${s.board.map((tile,i)=>`<button type="button" class="tile ${tile===null?'empty chosen':tile.kind==='filler'?'filler':''} ${tile!==null&&puzzleNeighbors(s.empty,n).includes(i)?'movable':''} ${!s.solved&&[2,4].includes(level)&&s.targets.includes(i)?'target':''}" data-tile="${i}" aria-label="${Math.floor(i/n)+1}행 ${i%n+1}열 ${tile===null?'빈칸':tile.char||'글자 없는 블록'}" ${s.solved?'disabled':''}>${tile?.char?esc(tile.char):''}</button>`).join('')}</div><p class="feedback" id="feedback" role="status" aria-live="polite"></p><div class="actions"><button class="outline" id="puzzle-reveal" type="button" ${s.titleRevealed?"disabled":""}>${s.titleRevealed?"제목 확인 완료":"제목 보기"}</button></div>${!inMix?'<div class="actions" id="puzzle-next" hidden><button class="primary next-btn" id="next-puzzle">새로운 퍼즐 풀기</button></div>':''}</section>${footer(inMix?'mix':'puzzle')}`);puzzleChosen=true;puzzleAnimating=false;
 app.querySelectorAll('[data-tile]').forEach(btn=>btn.onclick=()=>{
   if(puzzleAnimating||s.solved)return;
   const i=+btn.dataset.tile;
