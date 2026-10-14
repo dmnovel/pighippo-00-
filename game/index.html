@@ -1120,6 +1120,13 @@ button, a, .game-card, .intro-option, .initial, .initial-word, .tile,
 .panel .cover-natural{height:auto!important;min-height:0!important;display:block!important;text-align:center!important;overflow:hidden!important;padding:12px!important;}
 .cover-natural .excerpt-image-open{display:inline-block!important;max-width:100%!important;padding:0!important;border:0!important;background:transparent!important;cursor:zoom-in;border-radius:12px;vertical-align:middle;}
 .cover-natural .excerpt-image-open img{display:block!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:none!important;object-fit:contain!important;margin:0 auto!important;border-radius:8px;}
+
+/* Popup refinement: actual cover image enlargement; neutral shadow-only close button. */
+.excerpt-zoom-dialog .excerpt-zoom-close,
+.excerpt-zoom-dialog .excerpt-zoom-close:hover,
+.excerpt-zoom-dialog .excerpt-zoom-close:focus,
+.excerpt-zoom-dialog .excerpt-zoom-close:focus-visible{border:0!important;outline:0!important;box-shadow:0 5px 12px rgba(34,41,55,.26),inset 0 1px 0 rgba(255,255,255,.75)!important;}
+.excerpt-zoom-dialog.cover-zoom-dialog img{width:auto;max-width:100%!important;height:auto!important;max-height:min(68dvh,520px)!important;object-fit:contain;}
 </style>
 </head>
 <body><main class="shell" id="app"><header class="top"><div class="top-side"></div><h1>🎮 미니게임</h1><div class="top-side right"><a class="small-btn exit-btn" href="../index.html">나가기</a></div></header><p class="intro">원하는 게임을 선택해 주세요.</p><button class="feature" data-game="mix"><strong>🎲 랜덤게임</strong><span>등록된 문제 중 10문제 랜덤 출제</span></button><section class="cards"><button class="game-card" data-game="cover"><span class="emoji">🧩</span><strong>표지 조각</strong></button><button class="game-card" data-game="initials"><span class="emoji">🔤</span><strong>초성 퀴즈</strong></button><button class="game-card" data-game="couples"><span class="emoji">💘</span><strong>주인공 짝 잇기</strong></button><button class="game-card" data-game="excerpt"><span class="emoji">📖</span><strong>발췌 퀴즈</strong></button><button class="game-card" data-game="dialogue"><span class="emoji">💬</span><strong>대사 주인 찾기</strong></button><button class="game-card" data-game="puzzle"><span class="emoji">🧠</span><strong>슬라이딩 퍼즐</strong></button></section><p class="settings-note">미리보기에서 버튼이 작동하지 않으면 브라우저에서 열어 주세요.</p></main>
@@ -1473,6 +1480,15 @@ document.addEventListener('click', function(event){
   const enlarged=document.createElement('img');
   enlarged.src=image.currentSrc||image.src;
   enlarged.alt=image.alt;
+  if(dialog.classList.contains('cover-zoom-dialog')){
+    const fitCover=()=>{
+      const nativeWidth=enlarged.naturalWidth||image.naturalWidth||0;
+      const availableWidth=Math.max(1,dialog.clientWidth-40);
+      if(nativeWidth) enlarged.style.width=Math.round(Math.min(nativeWidth*2.3,availableWidth))+'px';
+    };
+    enlarged.addEventListener('load',fitCover,{once:true});
+    if(enlarged.complete) requestAnimationFrame(fitCover);
+  }
   content.append(enlarged);
   dialog.append(close,content);
   document.body.append(dialog);
@@ -1481,7 +1497,6 @@ document.addEventListener('click', function(event){
   dialog.addEventListener('click',e=>{if(e.target===dialog)dismiss()});
   dialog.addEventListener('close',()=>dialog.remove(),{once:true});
   dialog.showModal();
-  close.focus();
 });
 </script>
 </body></html>
